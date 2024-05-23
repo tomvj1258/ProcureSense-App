@@ -1,14 +1,19 @@
 import "./globals.css";
+import { GeistSans } from "geist/font/sans";
+import { AnalysisProvider } from '../contexts/analysis.context.js';
 
 export const metadata = {
-  title: "Purchase Rec AI",
+  title: "Procure Sense",
+  description: "A platform for analyzing procurement documents.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-b02 flex justify-center items-center min-h-screen min-w-screen px-16">
-        {children}
+      <body className={GeistSans.className}>
+        <AnalysisProvider>
+          {children}
+        </AnalysisProvider>
       </body>
     </html>
   );
