@@ -1,121 +1,133 @@
-"use client"
-import React, { useEffect, useRef, useState } from 'react';
-import { Layout, Menu } from 'antd';
-import { useRouter } from 'next/navigation';
-import { GeistSans } from "geist/font/sans";
-import { AxiosInstance } from '@/services/axios.service';
-import { useAnalysisContext } from '@/contexts/analysis.context.js';
+"use client";
 
-const axios_instance = new AxiosInstance();
-
-const { Content, Sider } = Layout;
-
-const MenuItems = [
-    {
-        key: '1',
-        icon: <span class="material-symbols-rounded mr-2">dashboard</span>,
-        label: 'Dashboard',
-        path: '/dashboard'
-    },
-    {
-        key: '2',
-        icon: <span class="material-symbols-rounded mr-2">receipt_long</span>,
-        label: <span className='ml-4'>Proposals</span>,
-        label: 'Proposals',
-        path: '/proposal/0'
-    },
-    {
-        key: '3',
-        label: <span className='ml-4'>Assessment</span>,
-        disabled: true,
-    },
-    {
-        key: '4',
-        icon: <span class="material-symbols-rounded mr-2">assignment</span>,
-        label: 'General',
-        path: '/general'
-    },
-    {
-        key: '5',
-        icon: <span class="material-symbols-rounded mr-2">payments</span>,
-        label: 'Finanical',
-        path: '/financial'
-    },
-    {
-        key: '6',
-        icon: <span class="material-symbols-rounded mr-2">running_with_errors</span>,
-        label: 'Risk',
-        path: '/risk'
-    },
-];
+import Link from "next/link"
+import { usePathname } from 'next/navigation'
+import { Home, LineChart, Menu, Plus, LogOut, Settings, ChevronsRight, } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 const DashboardLayout = ({ children }) => {
-    const router = useRouter();
-    const { analysisId, setAnalysisData, setAnalysisResult, setProposals, setRequestForProposal, setProposalAnalysis } = useAnalysisContext();
-    const [selectedMenu, setSelectedMenu] = useState('1');
-    const effectRan = useRef(false);
-
-    const handleMenuBarClick = ({ item, key, keyPath, e }) => {
-        const selectedItem = MenuItems.find(item => item.key === key);
-        setSelectedMenu(key);
-        router.push(selectedItem.path);
-    };
-
-    useEffect(() => {
-        const fetch_analysis_result = async () => {
-            await axios_instance.initialize();
-            console.log(analysisId)
-            axios_instance.post(`/api/get-analysis?analysisId=${analysisId}`)
-                .then(response => {
-                    setAnalysisData(response.data)
-                    setAnalysisResult(response.data.analysisResult)
-                    setProposals(response.data.proposals)
-                    setRequestForProposal(response.data.requestForProposal)
-                    setProposalAnalysis(response.data.analysisResult.proposalAnalysis)
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        }
-        if (effectRan.current) return;
-        else {
-            if (analysisId) {
-                fetch_analysis_result();
-                effectRan.current = true;
-            }
-        }
-    }, [analysisId, setAnalysisData, setAnalysisResult, setProposalAnalysis, setProposals, setRequestForProposal]);
-
+    const pathname = usePathname()
     return (
-        <Layout hasSider className={GeistSans.className}>
-            <Sider
-                style={{
-                    overflow: 'auto',
-                    height: '100vh',
-                    position: 'fixed',
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    background: '#fff',
-                    borderRight: '1px solid #f0f0f0',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-                }}
-            >
-                <div className="flex flex-row justify-center items-center py-3 -ml-5 text-[16px] select-none">
-                    <span className="material-symbols-sharp text-4xl text-[#1677ff]">
-                        keyboard_double_arrow_right
-                    </span>
-                    <span className='text-[#1677ff] font-bold'>Procure Sense</span>
+        <div className="grid min-h-screen w-full md:grid-cols-[200px_1fr] lg:grid-cols-[200px_1fr]">
+            <div className="hidden border-r bg-muted/40 md:block">
+                <div className="flex h-full max-h-screen flex-col gap-2">
+                    <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
+                        <Link href="/home" className="flex items-center gap-2 font-semibold">
+                            <ChevronsRight absoluteStrokeWidth={3} size={16} className="h-6 w-6" />
+                            <span className="">Procure Sense</span>
+                        </Link>
+                    </div>
+                    <div className="flex-1">
+                        <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+                            <Link href="/home" className={"flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary " + (pathname === '/home' ? "text-primary" : "")}>
+                                <Home className="h-4 w-4" />
+                                Home
+                            </Link>
+                            <Link href="/analysis" className={"flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary " + (pathname === '/analysis' ? "text-primary" : "")}>
+                                <LineChart className="h-4 w-4" />
+                                Analysis
+                            </Link>
+                        </nav>
+                    </div>
+                    <div className="mt-auto p-2">
+                        <Card x-chunk="dashboard-02-chunk-0">
+                            <CardHeader className="p-2 pt-0 md:p-4">
+                                <CardTitle className="text-sm">Add Analysis</CardTitle>
+                                <CardDescription className="text-xs">
+                                    Add Analysis to your dashboard to get insights on your proposals.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
+                                <Button size="sm" className="flex flex-row gap-2 w-full">
+                                    <Plus size={12} absoluteStrokeWidth={1} />
+                                    <Link href="/step-1">Add Analysis</Link>
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </div>
-                <Menu theme="light" mode="inline" defaultSelectedKeys={[selectedMenu]} items={MenuItems} onClick={handleMenuBarClick} selectable />
-            </Sider>
-            <Layout style={{ marginLeft: 200 }}>
-                <Content style={{ minHeight: '100vh', overflow: 'initial' }}>
+            </div>
+            <div className="flex flex-col">
+                <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                className="shrink-0 md:hidden"
+                            >
+                                <Menu className="h-5 w-5" />
+                                <span className="sr-only">Toggle navigation menu</span>
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="left" className="flex flex-col">
+                            <nav className="grid gap-2 text-lg font-medium">
+                                <Link href="/home" className="flex items-center gap-2 text-lg font-semibold mb-3">
+                                    <ChevronsRight absoluteStrokeWidth={3} size={16} className="h-6 w-6" />
+                                    <span className="">Procure Sense</span>
+                                </Link>
+                                <Link href="/home" className={"mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground " + (pathname === '/home' ? "text-primary" : "")}>
+                                    <Home className="h-4 w-4" />
+                                    Home
+                                </Link>
+                                <Link href="/analysis" className={"mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground " + (pathname === '/analysis' ? "text-primary" : "")}>
+                                    <LineChart className="h-4 w-4" />
+                                    Analysis
+                                </Link>
+                            </nav>
+                            <div className="mt-auto">
+                                <Card>
+                                    <CardHeader className="p-4">
+                                        <CardTitle className="text-sm">Add Analysis</CardTitle>
+                                        <CardDescription className="text-xs">
+                                            Add Analysis to your dashboard to get insights on your proposals.
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="p-4">
+                                        <Button size="sm" className="flex flex-row gap-2 w-full">
+                                            <Plus size={12} absoluteStrokeWidth={1} />
+                                            <Link href="/step-1">Add Analysis</Link>
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+                    <div className="w-full flex-1">
+                    </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Avatar>
+                                <AvatarImage src="https://api.dicebear.com/8.x/adventurer-neutral/svg?seed=Toby&backgroundColor=ecad80" />
+                                <AvatarFallback>SX</AvatarFallback>
+                            </Avatar>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem>
+                                <div className="flex flex-row gap-3 hover:text-primary items-center">
+                                    <Settings size={14} />
+                                    <span>Settings</span>
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <div className="flex flex-row gap-3 hover:text-primary items-center">
+                                    <LogOut size={14} />
+                                    <span >Logout</span>
+                                </div>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </header>
+                <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 min-h-[80%]">
                     {children}
-                </Content>
-            </Layout>
-        </Layout>
-    );
-};
+                </main>
+            </div>
+        </div>
+    )
+}
 
 export default DashboardLayout;
