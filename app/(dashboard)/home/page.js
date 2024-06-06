@@ -8,18 +8,22 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, Pagi
 import { Button } from "@/components/ui/button"
 
 const HomePage = () => {
-    const [analysis, setAnalysis] = useState([{ id: 1, title: "Analysis 1" }, { id: 2, title: "Analysis 2" }]);
+    const [analysisList, setAnalysisList] = useState([{ id: 1, title: "Analysis 1" }, { id: 2, title: "Analysis 2" }]);
     return (
         <>
             <div className="flex items-center justify-between">
                 <h1 className="text-lg font-semibold md:text-2xl">Home</h1>
+                <Button size="sm" className="flex flex-row gap-2">
+                    <Plus size={12} absoluteStrokeWidth={1} />
+                    <Link href="/add-analysis">Add Analysis</Link>
+                </Button>
             </div>
             {
-                analysis.length ?
+                analysisList.length ?
                     (
                         <div className="flex flex-1">
                             <div className="flex flex-col gap-4 w-full">
-                                {analysis.map((analysis, index) => (
+                                {analysisList.map((analysis, index) => (
                                     <Card key={index} className="p-1">
                                         <CardHeader className="flex flex-row justify-between items-center p-2">
                                             <CardTitle>Card Title</CardTitle>
@@ -51,7 +55,7 @@ const HomePage = () => {
                                 </p>
                                 <Button size="sm" className="flex flex-row gap-2">
                                     <Plus size={12} absoluteStrokeWidth={1} />
-                                    <Link href="/step-1">Add Analysis</Link>
+                                    <Link href="/add-analysis">Add Analysis</Link>
                                 </Button>
                             </div >
                         </div >

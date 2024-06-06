@@ -13,12 +13,12 @@ const DashboardLayout = ({ children }) => {
     const pathname = usePathname()
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[200px_1fr] lg:grid-cols-[200px_1fr]">
-            <div className="hidden border-r bg-muted/40 md:block">
+            <div className="hidden border-r md:block">
                 <div className="flex h-full max-h-screen flex-col gap-2">
                     <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
                         <Link href="/home" className="flex items-center gap-2 font-semibold">
-                            <ChevronsRight absoluteStrokeWidth={3} size={16} className="h-6 w-6" />
-                            <span className="">Procure Sense</span>
+                            <ChevronsRight absoluteStrokeWidth={3} size={16} className="h-6 w-6 text-primary" />
+                            <span className="text-primary">Procure Sense</span>
                         </Link>
                     </div>
                     <div className="flex-1">
@@ -34,7 +34,7 @@ const DashboardLayout = ({ children }) => {
                         </nav>
                     </div>
                     <div className="mt-auto p-2">
-                        <Card x-chunk="dashboard-02-chunk-0">
+                        <Card>
                             <CardHeader className="p-2 pt-0 md:p-4">
                                 <CardTitle className="text-sm">Add Analysis</CardTitle>
                                 <CardDescription className="text-xs">
@@ -44,7 +44,7 @@ const DashboardLayout = ({ children }) => {
                             <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
                                 <Button size="sm" className="flex flex-row gap-2 w-full">
                                     <Plus size={12} absoluteStrokeWidth={1} />
-                                    <Link href="/step-1">Add Analysis</Link>
+                                    <Link href="/add-analysis">Add Analysis</Link>
                                 </Button>
                             </CardContent>
                         </Card>
@@ -52,7 +52,7 @@ const DashboardLayout = ({ children }) => {
                 </div>
             </div>
             <div className="flex flex-col">
-                <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+                <header className="flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6">
                     <Sheet>
                         <SheetTrigger asChild>
                             <Button
@@ -90,7 +90,7 @@ const DashboardLayout = ({ children }) => {
                                     <CardContent className="p-4">
                                         <Button size="sm" className="flex flex-row gap-2 w-full">
                                             <Plus size={12} absoluteStrokeWidth={1} />
-                                            <Link href="/step-1">Add Analysis</Link>
+                                            <Link href="/add-analysis">Add Analysis</Link>
                                         </Button>
                                     </CardContent>
                                 </Card>
@@ -122,7 +122,7 @@ const DashboardLayout = ({ children }) => {
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </header>
-                <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 min-h-[80%]">
+                <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 min-h-[80%] bg-muted/40">
                     {children}
                 </main>
             </div>
