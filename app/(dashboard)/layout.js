@@ -1,18 +1,28 @@
 "use client";
 
 import Link from "next/link"
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Home, LineChart, Menu, Plus, LogOut, Settings, ChevronsRight, } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { AuthWrapper } from "@/utils/auth"
+import { AuthWrapper, Logout } from "@/utils/auth"
 
 const DashboardLayout = ({ children }) => {
-    const pathname = usePathname()
+    const pathname = usePathname();
+    const router = useRouter();
 
+    const handleLogout = async () => {
+        try {
+            await Logout();
+            return router.push("/login")
+        }
+        catch (error) {
+            console.error(error)
+        }
+    }
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[200px_1fr] lg:grid-cols-[200px_1fr]">
             <div className="hidden border-r md:block">
@@ -116,7 +126,7 @@ const DashboardLayout = ({ children }) => {
                                 </div>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
-                                <div className="flex flex-row gap-3 hover:text-primary items-center">
+                                <div className="flex flex-row gap-3 hover:text-primary items-center" onClick={() => { handleLogout() }}>
                                     <LogOut size={14} />
                                     <span >Logout</span>
                                 </div>

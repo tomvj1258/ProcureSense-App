@@ -8,23 +8,25 @@ import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation'
 import { Login } from "@/utils/auth"
+import { userStore } from "@/stores/user";
 
 const LoginPage = () => {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
+    const { setUserData } = userStore();
     const router = useRouter()
 
     const handleLogin = async () => {
         try {
             const userData = await Login({ email: email, password: password })
+            setUserData(userData);
             toast.success(`Welcome back, ${userData.firstName} ${userData.lastName} !`)
             router.push("/home")
         }
         catch (error) {
             toast.error(error.response.data.message)
-            console.error(error.response)
+            console.error(error)
         }
     }
 
