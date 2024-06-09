@@ -8,9 +8,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { AuthWrapper } from "@/utils/auth"
 
 const DashboardLayout = ({ children }) => {
     const pathname = usePathname()
+
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[200px_1fr] lg:grid-cols-[200px_1fr]">
             <div className="hidden border-r md:block">
@@ -130,4 +132,4 @@ const DashboardLayout = ({ children }) => {
     )
 }
 
-export default DashboardLayout;
+export default AuthWrapper(DashboardLayout);

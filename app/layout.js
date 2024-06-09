@@ -1,5 +1,8 @@
 import { GeistSans } from 'geist/font/sans';
+
+import { Toaster } from "@/components/ui/sonner"
 import "./globals.css";
+
 
 export const metadata = {
   title: "Procure Sense",
@@ -10,7 +13,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={GeistSans.className} suppressHydrationWarning >
-        {children}
+        <main>
+          {children}
+          <Toaster position="top-right" richColors={true} theme={'light'} />
+        </main>
       </body>
     </html>
   );
