@@ -70,8 +70,7 @@ const AddAnalysisPage = () => {
     }
 
     const handleStep3Next = () => {
-        console.log(proposalFileList);
-        // handleNext();
+        handleNext();
     }
 
     const handleStep4Next = () => {

@@ -28,7 +28,7 @@ const HomePage = () => {
                                         <CardHeader className="flex flex-row justify-between items-center p-2">
                                             <CardTitle>Card Title</CardTitle>
                                             <div className="flex flex-row gap-3">
-                                                <Button size="sm" className="flex flex-row gap-2" variant="outline">
+                                                <Button size="sm" className="flex flex-row gap-2" variant="outline" disabled>
                                                     <Pencil size={16} />
                                                     <span>Edit</span>
                                                 </Button>
