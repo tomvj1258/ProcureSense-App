@@ -9,6 +9,7 @@ import { useState } from "react"
 import { userStore } from "@/stores/user";
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation'
+import { RotateCw } from 'lucide-react';
 
 const SignupPage = () => {
     const [firstName, setFirstName] = useState('')
@@ -16,24 +17,33 @@ const SignupPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
+    const [isLoading, setIsLoading] = useState(false);
 
     const router = useRouter()
     const { setUserData } = userStore();
 
     const handleSignup = async () => {
-        if (password !== confirmPassword) {
-            toast.error("Passwords do not match")
-            return
+        if (!firstName || !lastName || !email || !password || !confirmPassword) {
+            if (password !== confirmPassword) {
+                toast.error("Passwords do not match")
+                return
+            }
+            try {
+                setIsLoading(true)
+                const userData = await Register({ email, password, firstName, lastName })
+                setUserData(userData);
+                toast.success(`Welcome, ${userData.firstName} ${userData.lastName} !`)
+                setIsLoading(false)
+                router.push("/home")
+            }
+            catch (error) {
+                toast.error(error.response.data.message)
+                setIsLoading(false)
+                console.error(error)
+            }
         }
-        try {
-            const userData = await Register({ email, password, firstName, lastName })
-            setUserData(userData);
-            toast.success(`Welcome, ${userData.firstName} ${userData.lastName} !`)
-            router.push("/home")
-        }
-        catch (error) {
-            toast.error(error.response.data.message)
-            console.error(error)
+        else {
+            toast.error("Please fill all the fields")
         }
     }
     return (
@@ -100,7 +110,20 @@ const SignupPage = () => {
                             />
                         </div>
                         <Button onClick={() => { handleSignup() }} className="w-full">
-                            Create an account
+                            {
+                                isLoading ?
+                                    (
+                                        <>
+                                            <RotateCw className="mr-2 h-4 w-4 animate-spin" />
+                                            Please wait ...
+                                        </>
+                                    ) :
+                                    (
+                                        <>
+                                            Create an account
+                                        </>
+                                    )
+                            }
                         </Button>
                     </div>
                     <div className="mt-4 text-center text-sm">

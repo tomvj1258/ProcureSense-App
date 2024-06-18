@@ -3,8 +3,19 @@
 import { CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import TagSelector from "@/components/ui/tag-selector"
+import { Textarea } from "@/components/ui/textarea"
+import { useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 const Step2Page = () => {
+
+    const [tags, setTags] = useState([])
+
+    const handleTagChange = (tags) => {
+        setTags(tags)
+    }
+
     return (
         <div>
             <CardHeader>
@@ -18,7 +29,27 @@ const Step2Page = () => {
                     <form className="grid w-full items-start gap-6 overflow-auto p-4 pt-0">
                         <fieldset className="grid gap-6 rounded-lg border p-4">
                             <legend className="-ml-1 px-1 text-sm font-medium">
-                                Basic Information
+                                Analyse Information
+                            </legend>
+                            <div className="grid gap-3">
+                                <Label htmlFor="company_name">Name</Label>
+                                <Input id="company_name" placeholder="Enter analyse name" />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="release_date">Tags</Label>
+                                <TagSelector
+                                    defaultTags={tags}
+                                    handleTagChange={(tags) => { handleTagChange(tags) }}
+                                />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="company_address">Description</Label>
+                                <Input id="company_address" placeholder="Enter analyse description" />
+                            </div>
+                        </fieldset>
+                        <fieldset className="grid gap-6 rounded-lg border p-4">
+                            <legend className="-ml-1 px-1 text-sm font-medium">
+                                RFP Basic Information
                             </legend>
                             <div className="flex flex-row gap-3">
                                 <div className="grid gap-3 w-4/6">
@@ -34,10 +65,22 @@ const Step2Page = () => {
                                 <Label htmlFor="company_address">Company Address</Label>
                                 <Input id="company_address" placeholder="Enter company address" />
                             </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="delivery_terms">Delivery Terms</Label>
+                                <Textarea id="delivery_terms" placeholder="Enter delivery Terms" />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="payment_terms">Payment Terms</Label>
+                                <Textarea id="payment_terms" placeholder="Enter payment Terms" />
+                            </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="terms_conditions">Terms & Conditions</Label>
+                                <Textarea id="terms_conditions" placeholder="Enter Terms & Conditions" />
+                            </div>
                         </fieldset>
                         <fieldset className="grid gap-6 rounded-lg border p-4">
                             <legend className="-ml-1 px-1 text-sm font-medium">
-                                Description Information
+                                RFP Description Information
                             </legend>
                             <div className="flex flex-row gap-3">
                                 <div className="grid gap-3 w-1/6">
@@ -52,7 +95,7 @@ const Step2Page = () => {
                         </fieldset>
                         <fieldset className="grid gap-6 rounded-lg border p-4">
                             <legend className="-ml-1 px-1 text-sm font-medium">
-                                Contact Information
+                                RFP Contact Information
                             </legend>
                             <div className="flex flex-row gap-3">
                                 <div className="grid gap-3 w-3/6">

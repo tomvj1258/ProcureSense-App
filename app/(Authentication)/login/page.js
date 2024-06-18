@@ -9,24 +9,31 @@ import { toast } from "sonner"
 import { useRouter } from 'next/navigation'
 import { Login } from "@/utils/auth"
 import { userStore } from "@/stores/user";
+import { RotateCw } from 'lucide-react';
 
 const LoginPage = () => {
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const { setUserData } = userStore();
+    const [isLoading, setIsLoading] = useState(false);
+
     const router = useRouter()
 
     const handleLogin = async () => {
         try {
+            setIsLoading(true)
             const userData = await Login({ email: email, password: password })
             setUserData(userData);
+            setIsLoading(false)
             toast.success(`Welcome back, ${userData.firstName} ${userData.lastName} !`)
             router.push("/home")
+
         }
         catch (error) {
             toast.error(error.response.data.message)
             console.error(error)
+            setIsLoading(false)
         }
     }
 
@@ -63,8 +70,21 @@ const LoginPage = () => {
                         required
                     />
                 </div>
-                <Button className="w-full" onClick={() => { handleLogin() }}>
-                    Login
+                <Button className="w-full" onClick={() => { handleLogin() }} disabled={isLoading}>
+                    {
+                        isLoading ?
+                            (
+                                <>
+                                    <RotateCw className="mr-2 h-4 w-4 animate-spin" />
+                                    Please wait ...
+                                </>
+                            ) :
+                            (
+                                <>
+                                    Login
+                                </>
+                            )
+                    }
                 </Button>
             </div>
             <div className="mt-4 text-center text-sm">

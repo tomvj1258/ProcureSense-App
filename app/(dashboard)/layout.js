@@ -26,7 +26,7 @@ const DashboardLayout = ({ children }) => {
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[200px_1fr] lg:grid-cols-[200px_1fr]">
             <div className="hidden border-r md:block">
-                <div className="flex h-full max-h-screen flex-col gap-2">
+                <div className="sticky top-0 flex h-full max-h-screen flex-col gap-2">
                     <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
                         <Link href="/home" className="flex items-center gap-2 font-semibold">
                             <ChevronsRight absoluteStrokeWidth={3} size={16} className="h-6 w-6 text-primary" />
@@ -64,7 +64,7 @@ const DashboardLayout = ({ children }) => {
                 </div>
             </div>
             <div className="flex flex-col">
-                <header className="flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6">
+                <header className="sticky top-0 flex h-14 items-center gap-4 border-b px-4 lg:h-[60px] lg:px-6 bg-white z-10">
                     <Sheet>
                         <SheetTrigger asChild>
                             <Button

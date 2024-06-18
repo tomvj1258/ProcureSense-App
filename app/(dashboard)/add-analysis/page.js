@@ -8,19 +8,61 @@ import { Card, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import { useState } from "react";
+import { addAnalyseStore } from "@/stores/addAnalyse";
+import { toast } from "sonner"
 
 const AddAnalysisPage = () => {
-    const [currentStep, setCurrentStep] = useState(1);
+
+    const [currentStep, setCurrentStep] = useState(2);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const { setAnalyseId, setAnalyseData, setRequestForProposalData, setProposalData } = addAnalyseStore();
+    const { analyseId, analyseData, requestForProposalData, proposalData, requestForProposalFileList, proposalFileList } = addAnalyseStore();
 
     const handleNext = () => {
+        if (currentStep === 4) return;
+
         setCurrentStep(currentStep + 1);
     }
     const handlePrevious = () => {
+        if (currentStep === 1) return;
+
         setCurrentStep(currentStep - 1);
     }
 
     const handleStep1Next = () => {
-        handleNext();
+
+        if (requestForProposalFileList.length !== 1) {
+            toast.error('Please upload a request for proposal file !');
+            return;
+        }
+
+        console.log(requestForProposalFileList);
+
+        //     setIsLoading(true);
+
+        //     const axios_instance = new AxiosConnector(`${process.env.NEXT_PUBLIC_API_BASE_URL}`, 'multipart/form-data');
+
+        //     const formData = new FormData();
+
+        //     requestForProposalFileList.forEach((file) => {
+        //         formData.append('file', file);
+        //     });
+
+        //     axios_instance.post('/ingest/rp', formData)
+        //         .then((response) => {
+        //             setRequestForProposalData(response.data);
+        //             setIsLoading(false);
+        //             handleNext();
+        //         })
+        //         .catch((error) => {
+        //             console.log(error);
+        //             setIsLoading(false);
+        //         });
+    }
+
+    const handleStep2Previous = () => {
+        handlePrevious();
     }
 
     const handleStep2Next = () => {
@@ -28,7 +70,8 @@ const AddAnalysisPage = () => {
     }
 
     const handleStep3Next = () => {
-        handleNext();
+        console.log(proposalFileList);
+        // handleNext();
     }
 
     const handleStep4Next = () => {
@@ -58,7 +101,7 @@ const AddAnalysisPage = () => {
                     <Card className="w-[80%]">
                         <Step2Page />
                         <CardFooter className="flex flex-row w-full justify-between mt-4">
-                            <Button variant="outline" className="flex flex-row gap-2">
+                            <Button variant="outline" className="flex flex-row gap-2" onClick={() => { handleStep2Previous() }}>
                                 <ChevronLeft size={20} />
                                 <span>Previous</span>
                             </Button>

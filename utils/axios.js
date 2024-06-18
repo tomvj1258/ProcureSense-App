@@ -18,7 +18,7 @@ class AxiosConnector {
             (config) => {
                 this.session_token = sessionStorage.getItem('session_token');
                 if (this.session_token) {
-                    config.headers.Authorization = `Bearer ${this.session_token}`;
+                    config.headers.Authorization = `${this.session_token}`;
                 }
                 return config;
             },
@@ -41,6 +41,10 @@ class AxiosConnector {
 
     get(endpoint) {
         return this.instance.get(endpoint);
+    }
+
+    put(endpoint, data) {
+        return this.instance.put(endpoint, data);
     }
 }
 
