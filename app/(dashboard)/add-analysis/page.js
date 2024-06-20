@@ -6,14 +6,20 @@ import Step3Page from "@/components/pages/step3";
 import Step4Page from "@/components/pages/step4";
 import { Card, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, RotateCw } from 'lucide-react';
 import { useState } from "react";
 import { addAnalyseStore } from "@/stores/addAnalyse";
-import { toast } from "sonner"
+import { toast } from "sonner";
+import {
+    ingestResquestForProposal,
+    ingestProposal,
+    fetchResquestForProposal,
+    fetchProposal
+} from "@/utils/addAnalyse";
 
 const AddAnalysisPage = () => {
 
-    const [currentStep, setCurrentStep] = useState(2);
+    const [currentStep, setCurrentStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
 
     const { setAnalyseId, setAnalyseData, setRequestForProposalData, setProposalData } = addAnalyseStore();
@@ -30,35 +36,46 @@ const AddAnalysisPage = () => {
         setCurrentStep(currentStep - 1);
     }
 
-    const handleStep1Next = () => {
+    const fetchResquestForProposalData = async (id) => {
+        try {
+            const response = await fetchResquestForProposal(id);
+            setRequestForProposalData(response.data.rp);
+            setAnalyseData(response.data.analyse);
+            handleNext();
+        }
+        catch (error) {
+            console.error(error);
+            toast.error('Error while fetching request for proposal data !');
+        }
+    }
+
+    const handleStep1Next = async () => {
+
+        setIsLoading(true);
+        let payload = new FormData();
 
         if (requestForProposalFileList.length !== 1) {
             toast.error('Please upload a request for proposal file !');
+            setIsLoading(false);
             return;
         }
 
-        console.log(requestForProposalFileList);
+        requestForProposalFileList.forEach((file) => {
+            payload.append('file', file);
+        });
 
-        //     setIsLoading(true);
-
-        //     const axios_instance = new AxiosConnector(`${process.env.NEXT_PUBLIC_API_BASE_URL}`, 'multipart/form-data');
-
-        //     const formData = new FormData();
-
-        //     requestForProposalFileList.forEach((file) => {
-        //         formData.append('file', file);
-        //     });
-
-        //     axios_instance.post('/ingest/rp', formData)
-        //         .then((response) => {
-        //             setRequestForProposalData(response.data);
-        //             setIsLoading(false);
-        //             handleNext();
-        //         })
-        //         .catch((error) => {
-        //             console.log(error);
-        //             setIsLoading(false);
-        //         });
+        try {
+            // const response = await ingestResquestForProposal(payload)
+            // setAnalyseId(response.data.id);
+            setAnalyseId('e34d0c9c-2367-41cb-96bd-9086c1e6c50f');
+            await fetchResquestForProposalData('e34d0c9c-2367-41cb-96bd-9086c1e6c50f');
+            setIsLoading(false);
+        }
+        catch (error) {
+            console.error(error);
+            toast.error('Error while uploading request for proposal ! Please try again.');
+            setIsLoading(false);
+        }
     }
 
     const handleStep2Previous = () => {
@@ -88,9 +105,22 @@ const AddAnalysisPage = () => {
                     <Card className="w-[80%]">
                         <Step1Page />
                         <CardFooter className="flex flex-row w-full justify-end mt-4">
-                            <Button className="flex flex-row gap-2" onClick={() => { handleStep1Next() }}>
-                                <span>Next</span>
-                                <ChevronRight size={20} />
+                            <Button className="flex flex-row gap-2" onClick={() => { handleStep1Next() }} disabled={isLoading}>
+                                {
+                                    isLoading ?
+                                        (
+                                            <>
+                                                <RotateCw className="mr-2 h-4 w-4 animate-spin" />
+                                                Please wait ...
+                                            </>
+                                        ) :
+                                        (
+                                            <>
+                                                <span>Next</span>
+                                                <ChevronRight size={20} />
+                                            </>
+                                        )
+                                }
                             </Button>
                         </CardFooter>
                     </Card>

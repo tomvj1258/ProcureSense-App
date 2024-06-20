@@ -7,10 +7,10 @@ import { addAnalyseStore } from "@/stores/addAnalyse";
 
 const Step1Page = () => {
 
-    const { setRequestForProposalFileList } = addAnalyseStore();
+    const { requestForProposalFileList, setRequestForProposalFileList } = addAnalyseStore();
 
     const handleRFPUpload = (e) => {
-        setRequestForProposalFileList(e.target.files);
+        setRequestForProposalFileList([...requestForProposalFileList, e.target.files[0]]);
     }
 
     return (

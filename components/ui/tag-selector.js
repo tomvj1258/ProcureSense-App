@@ -7,10 +7,12 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from "sonner"
+import { set } from "react-hook-form";
 
 const TagSelector = ({ defaultTags = [], handleTagChange, maxTags = 6 }) => {
 
-    const [tags, setTags] = useState(defaultTags)
+    const [tags, setTags] = useState([...defaultTags])
+
     const [tagName, setTagName] = useState('')
 
     const handleTagAdd = () => {
@@ -31,20 +33,21 @@ const TagSelector = ({ defaultTags = [], handleTagChange, maxTags = 6 }) => {
         setTagName('')
 
         toast.info(`Tag ${tagName} added !`)
-
-        handleTagChange(tags)
     }
+
+    useEffect(() => {
+        handleTagChange(tags)
+    }, [tags])
 
     const handleTagRemove = (id) => {
         setTags(tags.filter((tag) => tag.id !== id))
     }
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col">
             <div className="flex flex-row gap-2">
-                {tags.length === 0 && <Badge variant="destructive">No tags available</Badge>}
-                {tags.map((tag) =>
-                    <Badge key={tag.id} variant="secondary" className="flex flex-row gap-2">
+                {tags.map((tag, idx) =>
+                    <Badge key={idx} variant="secondary" className="flex flex-row gap-2 mb-2">
                         {tag.name}
                         <X size={14} onClick={() => handleTagRemove(tag.id)} />
                     </Badge>

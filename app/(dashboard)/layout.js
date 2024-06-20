@@ -8,11 +8,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import Loader from '@/components/pages/loader';
 import { AuthWrapper, Logout } from "@/utils/auth"
+import { dashboardStore } from "@/stores/dashboard.js";
+import { fetchAllAnalyse } from "@/utils/dashboard";
+import { useEffect, useRef, useState } from "react";
 
 const DashboardLayout = ({ children }) => {
     const pathname = usePathname();
     const router = useRouter();
+    const useEffectRan = useRef(false);
+
+    const { setAnalyseList, setTotalAnalyse, setSelectedAnalyseId } = dashboardStore();
+    const [isLoading, setIsLoading] = useState(true);
 
     const handleLogout = async () => {
         try {
@@ -23,6 +31,26 @@ const DashboardLayout = ({ children }) => {
             console.error(error)
         }
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            const allAnalyse = await fetchAllAnalyse();
+            setAnalyseList(allAnalyse.data);
+            setSelectedAnalyseId(allAnalyse.data[0].id)
+            setTotalAnalyse(allAnalyse.total);
+            setIsLoading(false);
+        }
+
+        if (!useEffectRan.current) {
+            useEffectRan.current = true;
+            fetchData()
+        }
+
+    }, [])
+
+
+
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[200px_1fr] lg:grid-cols-[200px_1fr]">
             <div className="hidden border-r md:block">
@@ -135,7 +163,7 @@ const DashboardLayout = ({ children }) => {
                     </DropdownMenu>
                 </header>
                 <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 min-h-[80%] bg-muted/40">
-                    {children}
+                    {isLoading ? <Loader /> : children}
                 </main>
             </div>
         </div>

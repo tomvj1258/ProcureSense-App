@@ -14,7 +14,7 @@ const Login = async ({ email, password }) => {
     try {
         const encoded_payload = { email: email, password: encode_token({ password: password }) }
 
-        const response = await axios.post('http://localhost:8080/api/v1/login', encoded_payload)
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, encoded_payload)
         const { token } = response.data.data
 
         const decoded_token = decode_token(token)
@@ -34,7 +34,7 @@ const Register = async ({ email, password, firstName, lastName }) => {
     try {
         const encoded_payload = { email: email, password: encode_token({ password: password }), firstName: firstName, lastName: lastName }
 
-        const response = await axios.post('http://localhost:8080/api/v1/register', encoded_payload)
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/register`, encoded_payload)
         const { token } = response.data.data
 
         const decoded_token = decode_token(token)
@@ -52,7 +52,7 @@ const Register = async ({ email, password, firstName, lastName }) => {
 
 const Logout = async () => {
     try {
-        const axios_instance = new AxiosConnector('http://localhost:8080/api/v1', 'application/json')
+        const axios_instance = new AxiosConnector(`${process.env.NEXT_PUBLIC_BACKEND_URL}/logout`, 'application/json')
         await axios_instance.post('/logout')
 
         if (typeof window !== 'undefined') {
