@@ -22,14 +22,18 @@ const AddAnalysisPage = () => {
     const [currentStep, setCurrentStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
 
-    const { setAnalyseId, setAnalyseData, setRequestForProposalData, setProposalData } = addAnalyseStore();
+    const { setAnalyseId, setAnalyseData, setRequestForProposalData, setProposalData, setRequestForProposalFileList } = addAnalyseStore();
     const { analyseId, analyseData, requestForProposalData, proposalData, requestForProposalFileList, proposalFileList } = addAnalyseStore();
+
+    const [updatedAnalyseData, setUpdatedAnalyseData] = useState({});
+    const [updatedRequestForProposalData, setUpdatedRequestForProposalData] = useState({});
 
     const handleNext = () => {
         if (currentStep === 4) return;
 
         setCurrentStep(currentStep + 1);
     }
+
     const handlePrevious = () => {
         if (currentStep === 1) return;
 
@@ -65,6 +69,7 @@ const AddAnalysisPage = () => {
         });
 
         try {
+            // to do - uncomment this line
             // const response = await ingestResquestForProposal(payload)
             // setAnalyseId(response.data.id);
             setAnalyseId('e34d0c9c-2367-41cb-96bd-9086c1e6c50f');
@@ -79,10 +84,21 @@ const AddAnalysisPage = () => {
     }
 
     const handleStep2Previous = () => {
+        setRequestForProposalFileList([]);
         handlePrevious();
     }
 
     const handleStep2Next = () => {
+        try {
+            let analysePayload = {}
+            let requestForProposalPayload = {}
+
+
+        }
+        catch (error) {
+            console.error(error);
+            toast.error('Error while saving request for proposal information ! Please try again.');
+        }
         handleNext();
     }
 
@@ -128,7 +144,10 @@ const AddAnalysisPage = () => {
                 {
                     currentStep === 2 &&
                     <Card className="w-[80%]">
-                        <Step2Page />
+                        <Step2Page
+                            handleAnalyseDataChange={(analyseData) => { setUpdatedAnalyseData(analyseData); }}
+                            handleRequestForProposalDataChange={(requestForProposalData) => { setUpdatedRequestForProposalData(requestForProposalData) }}
+                        />
                         <CardFooter className="flex flex-row w-full justify-between mt-4">
                             <Button variant="outline" className="flex flex-row gap-2" onClick={() => { handleStep2Previous() }}>
                                 <ChevronLeft size={20} />

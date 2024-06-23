@@ -6,29 +6,66 @@ import { Plus } from "lucide-react"
 import { useEffect, useState, useRef } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import Loader from '@/components/pages/loader';
 
 import { dashboardStore } from "@/stores/dashboard.js";
 import { fetchAnalyse } from "@/utils/dashboard";
+import GeneralPage from "@/components/pages/general";
+import FinancialPage from "@/components/pages/financial";
+import RiskPage from "@/components/pages/risk";
 
 const AnalysisPage = () => {
 
-    const { analyseList, selectedAnalyseId, setSelectedAnalyseId } = dashboardStore();
+    const { analyseList, selectedAnalyseId, setSelectedGeneralAnalyseData, setSelectedFinancialAnalyseData, setSelectedRiskAnalyseData } = dashboardStore();
     const useEffectRan = useRef(false);
 
-    const [selectedAnalyseData, setSelectedAnalyseData] = useState({});
+    const [analyseId, setAnalyseId] = useState(selectedAnalyseId);
     const [isLoading, setIsLoading] = useState(false);
+    const [isStoreUpdated, setIsStoreUpdated] = useState(false);
+    
 
-    const handleAnalyseSelection = (id) => {
-        setSelectedAnalyseId(id)
+    const handleAnalyseSelection = async (id) => {
+        setAnalyseId(id)
+        await fetchSelectedAnalyseData(id);
     }
 
-    const fetchSelectedAnalyseData = async () => {
+    const fetchSelectedAnalyseData = async (id) => {
         try {
             setIsLoading(true);
-            const analyseData = await fetchAnalyse(selectedAnalyseId)
+            setIsStoreUpdated(false);
+            const analyseData = await fetchAnalyse(id)
+            setSelectedGeneralAnalyseData({
+                analyse: {
+                    name: analyseData.data.name,
+                    description: analyseData.data.description,
+                    tags: analyseData.data.tags,
+                    createdAt: analyseData.data.created_at,
+                    updatedAt: analyseData.data.updated_at,
+                },
+                requestForProposal: analyseData.data.rp_analyse,
+                proposal: analyseData.data.p_analyse,
+                ranking: analyseData.data.analyse.ranking,
+                reasonForOverallSelection: analyseData.data.analyse.reasonForOverallSelection,
+                overallSuitableProposal: analyseData.data.analyse.overallSuitableProposal,
+                proposalAnalyse: analyseData.data.analyse.proposalAnalyse,
+            });
+            setSelectedFinancialAnalyseData({
+                financialAnalyse: analyseData.data.analyse.financialAnalyse,
+                proposal: analyseData.data.p_analyse,
+                financialRanking: analyseData.data.analyse.financialRanking,
+                overallFinanciallySuitableProposal: analyseData.data.analyse.overallFinanciallySuitableProposal,
+                proposalAnalyse: analyseData.data.analyse.proposalAnalyse,
+                reasonForFinancialSelection: analyseData.data.analyse.reasonForFinancialSelection,
+            });
+            setSelectedRiskAnalyseData({
+                riskAssessmentRanking: analyseData.data.analyse.riskAssessmentRanking,
+                proposal: analyseData.data.p_analyse,
+                overallRiskAssessmentSuitableProposal: analyseData.data.analyse.overallRiskAssessmentSuitableProposal,
+                proposalAnalyse: analyseData.data.analyse.proposalAnalyse,
+                reasonForRiskAssessmentSelection: analyseData.data.analyse.reasonForRiskAssessmentSelection,
+            })
             setIsLoading(false);
+            setIsStoreUpdated(true);
         }
         catch (error) {
             console.error(error)
@@ -37,10 +74,10 @@ const AnalysisPage = () => {
     }
 
     useEffect(() => {
-        const fetchAnalyseData = async () => {
-            await fetchSelectedAnalyseData();
-        }
         if (!useEffectRan.current) {
+            const fetchAnalyseData = async () => {
+                await fetchSelectedAnalyseData(selectedAnalyseId);
+            }
             fetchAnalyseData()
             useEffectRan.current = true;
         }
@@ -50,7 +87,7 @@ const AnalysisPage = () => {
         <>
             <div className="flex flex-row items-center justify-between">
                 <h1 className="text-lg font-semibold md:text-2xl">Analysis</h1>
-                <Select onValueChange={(id) => handleAnalyseSelection(id)} defaultValue={analyseList[0].id}>
+                <Select onValueChange={(id) => handleAnalyseSelection(id)} defaultValue={analyseId}>
                     <SelectTrigger className="w-[380px] bg-white">
                         <SelectValue placeholder="Select analyse" />
                     </SelectTrigger>
@@ -73,47 +110,18 @@ const AnalysisPage = () => {
                                 <Tabs defaultValue="general" className="w-full">
                                     <TabsList>
                                         <TabsTrigger value="general">General</TabsTrigger>
-                                        <TabsTrigger value="finanical">Finanical</TabsTrigger>
+                                        <TabsTrigger value="financial">Financial</TabsTrigger>
                                         <TabsTrigger value="risk">Risk</TabsTrigger>
                                     </TabsList>
                                     <TabsContent value="general">
-                                        <Card>
-                                            <CardHeader>
-                                                <CardTitle>General</CardTitle>
-                                                <CardDescription>
-                                                    Manage your products and view their sales performance.
-                                                </CardDescription>
-                                            </CardHeader>
-                                            <CardContent>
-                                                <p>General content</p>
-                                            </CardContent>
-                                        </Card>
+                                        {isStoreUpdated && !isLoading && <GeneralPage />}
+                                        {!isStoreUpdated && isLoading && <Loader />}
                                     </TabsContent>
-                                    <TabsContent value="finanical">
-                                        <Card>
-                                            <CardHeader>
-                                                <CardTitle>Finanical</CardTitle>
-                                                <CardDescription>
-                                                    Manage your products and view their sales performance.
-                                                </CardDescription>
-                                            </CardHeader>
-                                            <CardContent>
-                                                <p>Finanical content</p>
-                                            </CardContent>
-                                        </Card>
+                                    <TabsContent value="financial">
+                                        <FinancialPage />
                                     </TabsContent>
                                     <TabsContent value="risk">
-                                        <Card>
-                                            <CardHeader>
-                                                <CardTitle>Risk</CardTitle>
-                                                <CardDescription>
-                                                    Manage your products and view their sales performance.
-                                                </CardDescription>
-                                            </CardHeader>
-                                            <CardContent>
-                                                <p>Risk content</p>
-                                            </CardContent>
-                                        </Card>
+                                        < RiskPage />
                                     </TabsContent>
                                 </Tabs>
                             </div>

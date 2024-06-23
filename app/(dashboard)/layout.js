@@ -36,8 +36,8 @@ const DashboardLayout = ({ children }) => {
         const fetchData = async () => {
             setIsLoading(true);
             const allAnalyse = await fetchAllAnalyse();
-            setAnalyseList(allAnalyse.data);
-            setSelectedAnalyseId(allAnalyse.data[0].id)
+            setAnalyseList(allAnalyse.data.map(analyse => ( analyse.status === 'completed' )));
+            setSelectedAnalyseId(allAnalyse.data[1].id)
             setTotalAnalyse(allAnalyse.total);
             setIsLoading(false);
         }
@@ -48,8 +48,6 @@ const DashboardLayout = ({ children }) => {
         }
 
     }, [])
-
-
 
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[200px_1fr] lg:grid-cols-[200px_1fr]">

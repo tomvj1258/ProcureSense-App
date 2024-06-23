@@ -2,31 +2,23 @@
 
 import Link from "next/link"
 import { Plus, SquareArrowOutUpRight, Pencil, Trash2 } from "lucide-react"
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import { Button } from "@/components/ui/button"
+import { handleDateFormat } from "@/utils/function";
 
 import { dashboardStore } from "@/stores/dashboard.js";
 
 const HomePage = () => {
 
-    const pageLimit = 6;
-    const [currentPage, setCurrentPage] = useState(1);
-
+    const pageLimit = 5;
     const { analyseList, totalAnalyse } = dashboardStore();
 
+    const [currentPage, setCurrentPage] = useState(1);
     const [paginatedAnalyseList, setPaginatedAnalyseList] = useState([]);
     const [totalPages, setTotalPages] = useState(Math.ceil(totalAnalyse / pageLimit));
-
-    useEffect(() => {
-        const paginateAnalyse = () => {
-            const startIndex = (currentPage - 1) * pageLimit;
-            const endIndex = startIndex + pageLimit;
-            setPaginatedAnalyseList(analyseList.slice(startIndex, endIndex));
-        }
-        paginateAnalyse()
-    }, [currentPage, analyseList]);
 
     const handlePaginatePrev = () => {
         if (currentPage > 1)
@@ -37,6 +29,15 @@ const HomePage = () => {
         if (currentPage < Math.ceil(totalAnalyse / pageLimit))
             setCurrentPage(currentPage + 1);
     }
+
+    useEffect(() => {
+        const paginateAnalyse = () => {
+            const startIndex = (currentPage - 1) * pageLimit;
+            const endIndex = startIndex + pageLimit;
+            setPaginatedAnalyseList(analyseList.slice(startIndex, endIndex));
+        }
+        paginateAnalyse()
+    }, [currentPage, analyseList]);
 
     return (
         <>
@@ -56,8 +57,19 @@ const HomePage = () => {
                                     <Card key={index} className="p-1">
                                         <CardHeader className="flex flex-row justify-between items-center p-2">
                                             <CardTitle className="flex flex-col gap-2">
-                                                <span>{analyse.name}</span>
-                                                <span className="text-xs text-muted-foreground font-normal w-5/6">{analyse.description}</span>
+                                                <div className="flex flex-row gap-6 items-center">
+                                                    <span>{analyse.name}</span>
+                                                    <Badge className={"text-xs capitalize bg-warning text-warning-text hover:text-warning-text hover:bg-warning" + (analyse.status === 'completed' ? "bg-success text-success-text hover:bg-success hover:text-success-text" : "")}>
+                                                        {analyse.status}
+                                                    </Badge>
+                                                </div>
+                                                <div className="flex flex-col gap-3 text-xs text-muted-foreground font-normal w-5/6">
+                                                    <span>{analyse.description}</span>
+                                                    <span className="flex flex-row justify-between">
+                                                        <span>Created At: {handleDateFormat(analyse.created_at)}</span>
+                                                        <span>Last Updated At: {handleDateFormat(analyse.updated_at)}</span>
+                                                    </span>
+                                                </div>
                                             </CardTitle>
                                             <div className="flex flex-row gap-3">
                                                 <Button size="sm" className="flex flex-row gap-2" variant="outline" disabled>
