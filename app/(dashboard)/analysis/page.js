@@ -22,7 +22,7 @@ const AnalysisPage = () => {
     const [analyseId, setAnalyseId] = useState(selectedAnalyseId);
     const [isLoading, setIsLoading] = useState(false);
     const [isStoreUpdated, setIsStoreUpdated] = useState(false);
-    
+    const filteredAnalyseList = analyseList.filter(analyse => analyse.status === 'completed');
 
     const handleAnalyseSelection = async (id) => {
         setAnalyseId(id)
@@ -73,37 +73,45 @@ const AnalysisPage = () => {
         }
     }
 
+    console.log('filteredAnalyseList', filteredAnalyseList)
+
     useEffect(() => {
         if (!useEffectRan.current) {
             const fetchAnalyseData = async () => {
-                await fetchSelectedAnalyseData(selectedAnalyseId);
+                if (filteredAnalyseList.map(analyse => analyse.id).includes(selectedAnalyseId)) {
+                    await fetchSelectedAnalyseData(selectedAnalyseId);
+                }
+                else {
+                    setAnalyseId(null)
+                }
             }
             fetchAnalyseData()
             useEffectRan.current = true;
         }
     }, [])
 
+
     return (
         <>
             <div className="flex flex-row items-center justify-between">
                 <h1 className="text-lg font-semibold md:text-2xl">Analysis</h1>
-                <Select onValueChange={(id) => handleAnalyseSelection(id)} defaultValue={analyseId}>
+                {filteredAnalyseList.length > 0 && <Select onValueChange={(id) => handleAnalyseSelection(id)} defaultValue={analyseId}>
                     <SelectTrigger className="w-[380px] bg-white">
                         <SelectValue placeholder="Select analyse" />
                     </SelectTrigger>
                     <SelectContent className="w-[380px] bg-white">
                         {
-                            analyseList.map((analyse, idx) => (
+                            filteredAnalyseList.map((analyse, idx) => (
                                 <SelectItem key={idx} value={analyse.id}>
                                     {analyse.name}
                                 </SelectItem>
                             ))
                         }
                     </SelectContent>
-                </Select>
+                </Select>}
             </div>
             {isLoading ? <Loader /> :
-                selectedAnalyseId ?
+                analyseId ?
                     (
                         <div className="flex flex-1">
                             <div className="flex flex-col gap-4 w-full">

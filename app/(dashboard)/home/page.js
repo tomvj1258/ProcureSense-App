@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link"
+import { useRouter } from "next/navigation";
 import { Plus, SquareArrowOutUpRight, Pencil, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge"
@@ -14,7 +15,8 @@ import { dashboardStore } from "@/stores/dashboard.js";
 const HomePage = () => {
 
     const pageLimit = 5;
-    const { analyseList, totalAnalyse } = dashboardStore();
+    const router = useRouter();
+    const { analyseList, totalAnalyse, selectedAnalyseId } = dashboardStore();
 
     const [currentPage, setCurrentPage] = useState(1);
     const [paginatedAnalyseList, setPaginatedAnalyseList] = useState([]);
@@ -28,6 +30,16 @@ const HomePage = () => {
     const handlePaginateNext = () => {
         if (currentPage < Math.ceil(totalAnalyse / pageLimit))
             setCurrentPage(currentPage + 1);
+    }
+
+    const handleView = (id) => () => {
+        selectedAnalyseId(id);
+        router.push(`/analysis`);
+    }
+
+    const handleEdit = (id) => {
+        selectedAnalyseId(id);
+        router.push(`/add-analysis`);
     }
 
     useEffect(() => {
@@ -72,15 +84,17 @@ const HomePage = () => {
                                                 </div>
                                             </CardTitle>
                                             <div className="flex flex-row gap-3">
-                                                <Button size="sm" className="flex flex-row gap-2" variant="outline" disabled>
-                                                    <Pencil size={16} />
-                                                    <span>Edit</span>
-                                                </Button>
+                                                {analyse.status === 'pending' &&
+                                                    <Button size="sm" className="flex flex-row gap-2" variant="outline" onClick={() => handleEdit(analyse.id)} disabled={analyse.status !== 'pending'}>
+                                                        <Pencil size={16} />
+                                                        <span>Edit</span>
+                                                    </Button>
+                                                }
                                                 <Button size="sm" variant="destructive" className="flex flex-row gap-2">
                                                     <Trash2 size={16} />
                                                     <span>Delete</span>
                                                 </Button>
-                                                <Button size="sm" className="flex flex-row gap-2">
+                                                <Button size="sm" className="flex flex-row gap-2" onClick={() => { handleView(analyse.id) }} disabled={analyse.status !== 'completed'}>
                                                     <SquareArrowOutUpRight size={16} />
                                                     <span>View</span>
                                                 </Button>

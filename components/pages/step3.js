@@ -30,7 +30,7 @@ const Step3Page = () => {
     }
 
     useEffect(() => {
-        setProposalFileList(proposalFiles)
+        setProposalFileList(proposalFiles.map(file => file.file))
     }, [setProposalFileList, proposalFiles]);
 
 

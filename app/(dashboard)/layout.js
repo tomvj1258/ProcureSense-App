@@ -36,7 +36,7 @@ const DashboardLayout = ({ children }) => {
         const fetchData = async () => {
             setIsLoading(true);
             const allAnalyse = await fetchAllAnalyse();
-            setAnalyseList(allAnalyse.data.map(analyse => ( analyse.status === 'completed' )));
+            setAnalyseList(allAnalyse.data);
             setSelectedAnalyseId(allAnalyse.data[1].id)
             setTotalAnalyse(allAnalyse.total);
             setIsLoading(false);
