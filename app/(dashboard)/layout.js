@@ -37,7 +37,12 @@ const DashboardLayout = ({ children }) => {
             setIsLoading(true);
             const allAnalyse = await fetchAllAnalyse();
             setAnalyseList(allAnalyse.data);
-            setSelectedAnalyseId(allAnalyse.data[1].id)
+            if (allAnalyse.data.length > 0) {
+                const filteredAnalyseList = allAnalyse.data.filter(analyse => analyse.status === 'completed')
+                if (filteredAnalyseList.length > 0) {
+                    setSelectedAnalyseId(filteredAnalyseList[0].id);
+                }
+            }
             setTotalAnalyse(allAnalyse.total);
             setIsLoading(false);
         }

@@ -34,8 +34,20 @@ const startAnalyse = async (id) => {
     }
 }
 
+const deleteAnalyse = async (id) => {
+    try {
+        const axios_instance = new AxiosConnector(`${process.env.NEXT_PUBLIC_BACKEND_URL}`, 'application/json')
+        const response = await axios_instance.delete(`/analyse?id=${id}`)
+        return response.data
+    }
+    catch (error) {
+        console.log(`Error while deleting analyse [${id}]. Error: ${error}`)
+    }
+}
+
 export {
     fetchAllAnalyse,
     fetchAnalyse,
-    startAnalyse
+    startAnalyse,
+    deleteAnalyse
 }

@@ -174,9 +174,9 @@ const GeneralPage = () => {
                                     <div className="flex flex-row gap-1">
                                         <span className="font-semibold w-2/12">Contact Information</span>
                                         {requestForProposal.contactInformation ?
-                                            <span className="w-10/12">
-                                                <span>Raised by: {requestForProposal.contactInformation.rasiedBy}</span>
-                                                <span>Contact: {requestForProposal.contactInformation.contact}</span>
+                                            <span className="flex flex-col gap-2 w-10/12 ">
+                                                <span>Raised by: {requestForProposal.contactInformation.raisedBy}</span>
+                                                <span>Contact: {requestForProposal.contactInformation.contactDetail}</span>
                                             </span> : 'None'
                                         }
                                     </div>
@@ -308,6 +308,15 @@ const GeneralPage = () => {
                                                 )) : 'None'}
                                             </span>
                                         </div>
+                                        <div className="flex flex-row gap-1">
+                                        <span className="font-semibold w-2/12">Contact Information</span>
+                                        {proposal.contactInformation ?
+                                            <span className="flex flex-col gap-2 w-10/12 ">
+                                                <span>Submitted by: {proposal.contactInformation.submittedBy}</span>
+                                                <span>Contact: {proposal.contactInformation.contactDetail}</span>
+                                            </span> : 'None'
+                                        }
+                                    </div>
                                     </div>
                                 </fieldset>
                             ))}

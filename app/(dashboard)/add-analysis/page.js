@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Step1Page from "@/components/pages/step1";
 import Step2Page from "@/components/pages/step2";
 import Step3Page from "@/components/pages/step3";
@@ -7,7 +8,7 @@ import Step4Page from "@/components/pages/step4";
 import { Card, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, ChevronLeft, RotateCw, Save } from 'lucide-react';
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { addAnalyseStore } from "@/stores/addAnalyse";
 import { toast } from "sonner";
 import {
@@ -23,15 +24,18 @@ import { startAnalyse } from "@/utils/dashboard";
 
 const AddAnalysisPage = () => {
 
-    const [currentStep, setCurrentStep] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
+    const useEffectRan = useRef(false);
 
-    const { setAnalyseId, setAnalyseData, setRequestForProposalData, setProposalData, setRequestForProposalFileList } = addAnalyseStore();
-    const { analyseId, requestForProposalFileList, proposalFileList } = addAnalyseStore();
+    const { setAnalyseId, setAnalyseData, setRequestForProposalData, setProposalData, setRequestForProposalFileList, setProposalFileList } = addAnalyseStore();
+    const { analyseId, requestForProposalFileList, proposalFileList, stage } = addAnalyseStore();
 
     const [updatedAnalyseData, setUpdatedAnalyseData] = useState({});
     const [updatedRequestForProposalData, setUpdatedRequestForProposalData] = useState({});
     const [updatedProposalData, setUpdatedProposalData] = useState({});
+    const [currentStep, setCurrentStep] = useState(stage);
+    const [isButtonLoading, setIsButtonLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const handleNext = () => {
         if (currentStep === 4) return;
@@ -50,7 +54,6 @@ const AddAnalysisPage = () => {
             const response = await fetchResquestForProposal(id);
             setRequestForProposalData(response.data.rp);
             setAnalyseData(response.data.analyse);
-            handleNext();
         }
         catch (error) {
             console.error(error);
@@ -60,10 +63,8 @@ const AddAnalysisPage = () => {
 
     const fetchProposalData = async (id) => {
         try {
-            console.log(id)
             const response = await fetchProposal(id);
             setProposalData(response.data);
-            handleNext();
         }
         catch (error) {
             console.error(error);
@@ -73,12 +74,12 @@ const AddAnalysisPage = () => {
 
     const handleStep1Next = async () => {
 
-        setIsLoading(true);
+        setIsButtonLoading(true);
         let payload = new FormData();
 
         if (requestForProposalFileList.length !== 1) {
             toast.error('Please upload a request for proposal file !');
-            setIsLoading(false);
+            setIsButtonLoading(false);
             return;
         }
 
@@ -89,14 +90,14 @@ const AddAnalysisPage = () => {
         try {
             const response = await ingestResquestForProposal(payload)
             setAnalyseId(response.data.id);
-            setAnalyseId('e34d0c9c-2367-41cb-96bd-9086c1e6c50f');
-            await fetchResquestForProposalData('e34d0c9c-2367-41cb-96bd-9086c1e6c50f');
-            setIsLoading(false);
+            await fetchResquestForProposalData(response.data.id);
+            setIsButtonLoading(false);
+            handleNext();
         }
         catch (error) {
             console.error(error);
             toast.error('Error while uploading request for proposal ! Please try again.');
-            setIsLoading(false);
+            setIsButtonLoading(false);
         }
     }
 
@@ -107,6 +108,7 @@ const AddAnalysisPage = () => {
 
     const handleStep2Next = async () => {
         try {
+            setIsButtonLoading(true);
             let analysePayload = { id: analyseId, ...updatedAnalyseData }
             let requestForProposalPayload = { id: analyseId, ...updatedRequestForProposalData }
 
@@ -138,23 +140,24 @@ const AddAnalysisPage = () => {
                 console.error(error);
                 toast.error('Error while saving request for proposal information ! Please try again.');
             }
-
+            setIsButtonLoading(false);
             handleNext();
         }
         catch (error) {
             console.error(error);
             toast.error('Error while saving request for proposal information ! Please try again.');
+            setIsButtonLoading(false);
         }
     }
 
     const handleStep3Next = async () => {
 
-        setIsLoading(true);
+        setIsButtonLoading(true);
         let payload = new FormData();
 
-        if (proposalFileList.length < 1) {
+        if (proposalFileList.length === 0) {
             toast.error('Please upload proposal file !');
-            setIsLoading(false);
+            setIsButtonLoading(false);
             return;
         }
 
@@ -162,46 +165,78 @@ const AddAnalysisPage = () => {
             payload.append('file', file);
         });
 
-        payload.append('id', 'e34d0c9c-2367-41cb-96bd-9086c1e6c50f');
+        payload.append('id', analyseId);
 
         try {
-            // await ingestProposal(payload)  //to do - uncomment this line
-            await fetchProposalData('e34d0c9c-2367-41cb-96bd-9086c1e6c50f');
-            setIsLoading(false);
+            await ingestProposal(payload)
+            await fetchProposalData(analyseId);
+            setIsButtonLoading(false);
+            handleNext();
         }
         catch (error) {
             console.error(error);
             toast.error('Error while uploading proposal ! Please try again.');
-            setIsLoading(false);
+            setIsButtonLoading(false);
         }
     }
 
     const handleStep4Next = async () => {
         try {
-            let proposalPayload = { id: analyseId, p_analyse: updatedProposalData }
 
-            for (let idx = 0; idx < proposalPayload.proposal.length; idx++) {
-                if (!proposalPayload[idx].companyName) {
-                    toast.error(`Please enter a company name for the proposal ${idx + 1} !`);
-                    return
-                }
-            }
+            setIsButtonLoading(true);
+
+            let proposalPayload = { id: analyseId, p_analyse: updatedProposalData }
 
             try {
                 await editProposal(proposalPayload)
-                await startAnalyse(analyseId)
             }
             catch (error) {
                 console.error(error);
                 toast.error('Error while saving analysis information ! Please try again.');
             }
 
+            try {
+                await startAnalyse(analyseId)
+                toast.success('Analysis started successfully ! You can view the analysis in the home.');
+                setAnalyseId('');
+                setAnalyseData({});
+                setRequestForProposalData({});
+                setProposalData([])
+                setRequestForProposalFileList([]);
+                setProposalFileList([]);
+                setIsButtonLoading(false);
+                router.push('/home');
+            }
+            catch (error) {
+                console.error(error);
+                toast.error('Error while starting analysis ! Please try again.');
+                setIsButtonLoading(false);
+            }
+
         }
         catch (error) {
             console.error(error);
             toast.error('Error while saving proposal information ! Please try again.');
+            setIsButtonLoading(false);
         }
     }
+
+    useEffect(() => {
+        const handleEditAnalyse = async () => {
+            setIsLoading(true);
+            if (stage === 2) {
+                await fetchResquestForProposalData(analyseId);
+            }
+            else if (stage === 4) {
+                await fetchProposalData(analyseId);
+            }
+            setIsLoading(false);
+        }
+        if (!useEffectRan.current) {
+            useEffectRan.current = true;
+            handleEditAnalyse();
+        }
+    }, []);
 
     return (
         <div className="flex flex-col gap-3 w-full item-center justify-center">
@@ -209,15 +244,15 @@ const AddAnalysisPage = () => {
                 <h1 className="text-lg font-semibold md:text-2xl">Add Analysis</h1>
                 <span className="text-sm text-gray-500">Add a new analysis</span>
             </div>
-            <div className="flex flex-col justify-center items-center gap-2">
+            {!isLoading && <div className="flex flex-col justify-center items-center gap-2">
                 {
                     currentStep === 1 &&
                     <Card className="w-[80%]">
                         <Step1Page />
                         <CardFooter className="flex flex-row w-full justify-end mt-4">
-                            <Button className="flex flex-row gap-2" onClick={() => { handleStep1Next() }} disabled={isLoading}>
+                            <Button className="flex flex-row gap-2" onClick={() => { handleStep1Next() }} disabled={isButtonLoading}>
                                 {
-                                    isLoading ?
+                                    isButtonLoading ?
                                         (
                                             <>
                                                 <RotateCw className="mr-2 h-4 w-4 animate-spin" />
@@ -247,9 +282,9 @@ const AddAnalysisPage = () => {
                                 <ChevronLeft size={20} />
                                 <span>Previous</span>
                             </Button>
-                            <Button className="flex flex-row gap-2" onClick={() => { handleStep2Next() }}>
+                            <Button className="flex flex-row gap-2" onClick={() => { handleStep2Next() }} disabled={isButtonLoading}>
                                 {
-                                    isLoading ?
+                                    isButtonLoading ?
                                         (
                                             <>
                                                 <RotateCw className="mr-2 h-4 w-4 animate-spin" />
@@ -272,13 +307,13 @@ const AddAnalysisPage = () => {
                     <Card className="w-[80%]">
                         <Step3Page />
                         <CardFooter className="flex flex-row w-full justify-between mt-4">
-                            <Button variant="outline" className="flex flex-row gap-2">
+                            <Button variant="outline" className="flex flex-row gap-2" onClick={() => { handlePrevious() }}>
                                 <ChevronLeft size={20} />
                                 <span>Previous</span>
                             </Button>
-                            <Button className="flex flex-row gap-2" onClick={() => { handleStep3Next() }}>
+                            <Button className="flex flex-row gap-2" onClick={() => { handleStep3Next() }} disabled={isButtonLoading}>
                                 {
-                                    isLoading ?
+                                    isButtonLoading ?
                                         (
                                             <>
                                                 <RotateCw className="mr-2 h-4 w-4 animate-spin" />
@@ -300,14 +335,14 @@ const AddAnalysisPage = () => {
                     currentStep === 4 &&
                     <Card className="w-[80%]">
                         <Step4Page
-                            handleProposalAnalyseDataChange={(proposalData) => { console.log(proposalData); setUpdatedProposalData(proposalData) }}
+                            handleProposalAnalyseDataChange={(proposalData) => { setUpdatedProposalData(proposalData) }}
                             handlePrevious={() => { handlePrevious() }}
                             handleNext={() => { handleStep4Next() }}
+                            isLoading={isButtonLoading}
                         />
-
                     </Card>
                 }
-            </div>
+            </div>}
         </div>
     );
 }

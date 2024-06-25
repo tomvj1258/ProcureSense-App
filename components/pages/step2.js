@@ -17,6 +17,8 @@ const Step2Page = ({ handleAnalyseDataChange, handleRequestForProposalDataChange
     const { analyseData, requestForProposalData } = addAnalyseStore();
     const { setAnalyseData, setRequestForProposalData } = addAnalyseStore();
 
+    console.log('requestForProposalData', requestForProposalData)
+    
     const useEffectRan = useRef(false);
 
     const [analyseName, setAnalyseName] = useState("")
@@ -26,10 +28,10 @@ const Step2Page = ({ handleAnalyseDataChange, handleRequestForProposalDataChange
     const [companyName, setCompanyName] = useState("")
     const [releaseDate, setReleaseDate] = useState("")
     const [companyAddress, setCompanyAddress] = useState("")
-    const [deliveryTerms, setDeliveryTerms] = useState("")
-    const [paymentTerms, setPaymentTerms] = useState("")
-    const [termsConditions, setTermsConditions] = useState("")
-    const [scopeOfWork, setScopeOfWork] = useState([{ quantity: "", description: "" }])
+    const [deliveryTerms, setDeliveryTerms] = useState([])
+    const [paymentTerms, setPaymentTerms] = useState([])
+    const [termsConditions, setTermsConditions] = useState([])
+    const [scopeOfWork, setScopeOfWork] = useState([])
     const [rasiedBy, setRasiedBy] = useState("")
     const [contact, setContact] = useState("")
 
@@ -39,7 +41,7 @@ const Step2Page = ({ handleAnalyseDataChange, handleRequestForProposalDataChange
         if (analyseData) {
             setAnalyseName(analyseData.name)
             setAnalyseDescription(analyseData.description)
-            setAnalyseTags(analyseData.tags.map(tag => { return { id: uuidv4(), name: tag } }))
+            setAnalyseTags(analyseData.tags ? analyseData.tags.map(tag => { return { id: uuidv4(), name: tag } }) : [])
         }
     }
 
@@ -48,12 +50,12 @@ const Step2Page = ({ handleAnalyseDataChange, handleRequestForProposalDataChange
             setCompanyName(requestForProposalData.companyName)
             setReleaseDate(requestForProposalData.releaseDate)
             setCompanyAddress(requestForProposalData.companyAddress)
-            setDeliveryTerms(requestForProposalData.deliveryTerms)
-            setPaymentTerms(requestForProposalData.paymentTerms)
-            setTermsConditions(requestForProposalData.termsConditions)
+            setDeliveryTerms(requestForProposalData?.deliveryTerms.join('\n'))
+            setPaymentTerms(requestForProposalData?.paymentTerms.join('\n'))
+            setTermsConditions(requestForProposalData?.termsConditions.join('\n'))
             setScopeOfWork(requestForProposalData.scopeOfWork)
-            setRasiedBy(requestForProposalData.contactInformation.raisedBy)
-            setContact(requestForProposalData.contactInformation.contactDetail)
+            setRasiedBy(requestForProposalData.contactInformation ? requestForProposalData.contactInformation.raisedBy : '')
+            setContact(requestForProposalData.contactInformation ? requestForProposalData.contactInformation.contactDetail : '')
         }
     }
 
@@ -94,8 +96,11 @@ const Step2Page = ({ handleAnalyseDataChange, handleRequestForProposalDataChange
     }
 
     useEffect(() => {
-        setAnalyseDataState()
-        setRequestForProposalDataState()
+        if (!useEffectRan.current) {
+            useEffectRan.current = true
+            setAnalyseDataState()
+            setRequestForProposalDataState()
+        }
     }, [])
 
     useEffect(() => {
@@ -111,9 +116,9 @@ const Step2Page = ({ handleAnalyseDataChange, handleRequestForProposalDataChange
             companyName: companyName,
             releaseDate: releaseDate,
             companyAddress: companyAddress,
-            deliveryTerms: deliveryTerms,
-            paymentTerms: paymentTerms,
-            termsConditions: termsConditions,
+            deliveryTerms: deliveryTerms.length > 0 ? deliveryTerms.split('\n').filter(term => term !== '') : requestForProposalData?.deliveryTerms,
+            paymentTerms: paymentTerms.length > 0 ? paymentTerms.split('\n').filter(term => term !== '') : requestForProposalData?.paymentTerms,
+            termsConditions: termsConditions.length > 0 ? termsConditions.split('\n').filter(term => term !== '') : requestForProposalData?.termsConditions,
             scopeOfWork: scopeOfWork,
             contactInformation: {
                 raisedBy: rasiedBy,

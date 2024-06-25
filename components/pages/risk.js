@@ -25,8 +25,6 @@ const RiskPage = () => {
         router.push(`/analysis/#${sectionId}`);
     };
 
-    console.log('selectedRiskAnalyseData', selectedRiskAnalyseData)
-
     return (
         <Card>
             <CardHeader>

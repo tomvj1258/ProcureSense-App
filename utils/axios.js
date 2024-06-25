@@ -46,6 +46,10 @@ class AxiosConnector {
     put(endpoint, data) {
         return this.instance.put(endpoint, data);
     }
+
+    delete(endpoint) {
+        return this.instance.delete(endpoint);
+    }
 }
 
 export default AxiosConnector;

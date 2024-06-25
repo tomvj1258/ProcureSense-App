@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState, useRef } from "react";
-import { ChevronRight, ChevronLeft, Undo, Save } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Undo, BarChartHorizontalBig, RotateCw } from 'lucide-react';
 import { addAnalyseStore } from "@/stores/addAnalyse";
 
-const Step4Page = ({ handleProposalAnalyseDataChange, handleNext, handlePrevious }) => {
+const Step4Page = ({ handleProposalAnalyseDataChange, handleNext, handlePrevious, isLoading }) => {
 
     const { proposalData } = addAnalyseStore();
     const useEffectRan = useRef(false);
@@ -34,11 +34,15 @@ const Step4Page = ({ handleProposalAnalyseDataChange, handleNext, handlePrevious
     const handleNextProposal = () => {
         if (currentProposal === proposalData.length - 1) handleNext();
         setCurrentProposal(currentProposal + 1);
+        setCurrentProposalData(proposalData[currentProposal + 1])
+        setProposalData(proposalData[currentProposal + 1])
     }
 
     const handlePreviousProposal = () => {
         if (currentProposal === 0) handlePrevious();
         setCurrentProposal(currentProposal - 1);
+        setCurrentProposalData(proposalData[currentProposal - 1])
+        setProposalData(proposalData[currentProposal - 1])
     }
 
     const handleRestoreDefault = () => {
@@ -47,12 +51,12 @@ const Step4Page = ({ handleProposalAnalyseDataChange, handleNext, handlePrevious
         setCompanyAddress(currentProposalData.companyAddress);
         setCompanyEmail(currentProposalData.companyEmail);
         setCompanyWebsite(currentProposalData.companyWebsite);
-        setTermsConditions(currentProposalData?.termsConditions.join(', '));
-        setPaymentTerms(currentProposalData?.paymentTerms.join(', '));
-        setDeliveryTerms(currentProposalData?.deliveryTerms.join(', '));
-        setImplementationDetails(currentProposalData?.proposalImplementation.join(', '));
+        setTermsConditions(currentProposalData?.termsConditions.join('\n'));
+        setPaymentTerms(currentProposalData?.paymentTerms.join('\n'));
+        setDeliveryTerms(currentProposalData?.deliveryTerms.join('\n'));
+        setImplementationDetails(currentProposalData?.proposalImplementation.join('\n'));
         setScopeOfWork(currentProposalData.scopeOfWork);
-        setKeyBenefits(currentProposalData?.keyBenefits.join(', '));
+        setKeyBenefits(currentProposalData?.keyBenefits.join('\n'));
         setContactDetail(currentProposalData.contactInformation.contactDetail);
         setSubmittedBy(currentProposalData.contactInformation.submittedBy);
     }
@@ -67,30 +71,29 @@ const Step4Page = ({ handleProposalAnalyseDataChange, handleNext, handlePrevious
     }
 
     const setProposalData = (proposalData) => {
-        console.log('proposalData?.proposalImplementation', proposalData?.proposalImplementation)
         setCompanyName(proposalData.companyName);
         setSubmissionDate(proposalData.submissionDate);
         setCompanyAddress(proposalData.companyAddress);
         setCompanyEmail(proposalData.companyEmail);
         setCompanyWebsite(proposalData.companyWebsite);
-        setTermsConditions(proposalData?.termsConditions.join(', '));
-        setPaymentTerms(proposalData?.paymentTerms.join(', '));
-        setDeliveryTerms(proposalData?.deliveryTerms.join(', '));
-        setImplementationDetails(proposalData?.proposalImplementation.join(', '));
+        setTermsConditions(proposalData?.termsConditions.join('\n'));
+        setPaymentTerms(proposalData?.paymentTerms.join('\n'));
+        setDeliveryTerms(proposalData?.deliveryTerms.join('\n'));
+        setImplementationDetails(proposalData?.proposalImplementation.join('\n'));
         setScopeOfWork(proposalData.scopeOfWork);
-        setKeyBenefits(proposalData?.keyBenefits.join(', '));
+        setKeyBenefits(proposalData?.keyBenefits.join('\n'));
         setContactDetail(proposalData.contactInformation.contactDetail);
         setSubmittedBy(proposalData.contactInformation.submittedBy);
     }
 
     useEffect(() => {
         if (!useEffectRan.current) {
-            console.log('useEffect', currentProposal, proposalData[currentProposal])
             setCurrentProposalData(proposalData[currentProposal])
             setProposalData(proposalData[currentProposal])
             useEffectRan.current = true;
         }
     }, [])
+
 
     useEffect(() => {
         let payload = proposalData
@@ -100,12 +103,12 @@ const Step4Page = ({ handleProposalAnalyseDataChange, handleNext, handlePrevious
             companyAddress,
             companyEmail,
             companyWebsite,
-            termsConditions: termsConditions.length > 0 ? termsConditions.split(',') : payload[currentProposal].termsConditions,
-            paymentTerms: paymentTerms.length > 0 ? paymentTerms.split(',') : payload[currentProposal].paymentTerms,
-            deliveryTerms: deliveryTerms.length > 0 ? deliveryTerms.split(',') : payload[currentProposal].deliveryTerms,
-            proposalImplementation: implementationDetails.length > 0 ? implementationDetails.split(',') : payload[currentProposal].implementationDetails,
+            termsConditions: termsConditions.length > 0 ? termsConditions.split('\n') : payload[currentProposal].termsConditions,
+            paymentTerms: paymentTerms.length > 0 ? paymentTerms.split('\n') : payload[currentProposal].paymentTerms,
+            deliveryTerms: deliveryTerms.length > 0 ? deliveryTerms.split('\n') : payload[currentProposal].deliveryTerms,
+            proposalImplementation: implementationDetails.length > 0 ? implementationDetails.split('\n') : payload[currentProposal].implementationDetails,
             scopeOfWork,
-            keyBenefits: keyBenefits.length > 0 ? keyBenefits.split(',') : payload[currentProposal].keyBenefits,
+            keyBenefits: keyBenefits.length > 0 ? keyBenefits.split('\n') : payload[currentProposal].keyBenefits,
             contactInformation: {
                 contactDetail,
                 submittedBy
@@ -259,7 +262,7 @@ const Step4Page = ({ handleProposalAnalyseDataChange, handleNext, handlePrevious
                                         />
                                     </div>
                                     <div className="grid gap-3 w-1/12">
-                                        <Label htmlFor="description">Before Taxes</Label>
+                                        <Label htmlFor="description">Bfr Taxes</Label>
                                         <Input
                                             id="price_before_taxes"
                                             placeholder="Before Taxes"
@@ -377,16 +380,29 @@ const Step4Page = ({ handleProposalAnalyseDataChange, handleNext, handlePrevious
                     <ChevronLeft size={20} />
                     <span>Previous</span>
                 </Button>
-                <Button className="flex flex-row gap-2" onClick={() => { handleNextProposal() }}>
-                    {currentProposal === proposalData.length - 1 ?
-                        (<>
-                            <span>Submit</span>
-                            <Save size={18} />
-                        </>) :
-                        (<>
-                            <span>Next</span>
-                            <ChevronRight size={20} />
-                        </>)
+                <Button className="flex flex-row gap-2" onClick={() => { handleNextProposal() }} disabled={isLoading}>
+                    {
+                        isLoading ?
+                            (
+                                <>
+                                    <RotateCw className="mr-2 h-4 w-4 animate-spin" />
+                                    Please wait ...
+                                </>
+                            ) :
+                            (
+                                <>
+                                    {currentProposal === proposalData.length - 1 ?
+                                        (<>
+                                            <span>Start Analyse</span>
+                                            <BarChartHorizontalBig size={18} />
+                                        </>) :
+                                        (<>
+                                            <span>Next</span>
+                                            <ChevronRight size={20} />
+                                        </>)
+                                    }
+                                </>
+                            )
                     }
                 </Button>
             </CardFooter>

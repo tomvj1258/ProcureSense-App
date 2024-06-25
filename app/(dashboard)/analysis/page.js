@@ -73,8 +73,6 @@ const AnalysisPage = () => {
         }
     }
 
-    console.log('filteredAnalyseList', filteredAnalyseList)
-
     useEffect(() => {
         if (!useEffectRan.current) {
             const fetchAnalyseData = async () => {
@@ -89,7 +87,6 @@ const AnalysisPage = () => {
             useEffectRan.current = true;
         }
     }, [])
-
 
     return (
         <>
