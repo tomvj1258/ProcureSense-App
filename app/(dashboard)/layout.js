@@ -25,7 +25,8 @@ const DashboardLayout = ({ children }) => {
     const handleLogout = async () => {
         try {
             await Logout();
-            return router.push("/login")
+            router.push("/login")
+            return
         }
         catch (error) {
             console.error(error)

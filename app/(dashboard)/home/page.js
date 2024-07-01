@@ -179,7 +179,7 @@ const HomePage = () => {
                                                             </AlertDialogFooter>
                                                         </AlertDialogContent>
                                                     </AlertDialog>
-                                                    {(analyse.status !== 'failed' && analyse.status !== 'pending') && <Button size="sm" className="flex flex-row gap-2" onClick={handleView(analyse.id)}>
+                                                    {(analyse.status !== 'failed' && analyse.status !== 'pending' && analyse.status !== 'processing') && <Button size="sm" className="flex flex-row gap-2" onClick={handleView(analyse.id)}>
                                                         <SquareArrowOutUpRight size={16} />
                                                         <span>View</span>
                                                     </Button>}
