@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { addAnalyseStore } from "@/stores/addAnalyse";
 
 const Step3Page = () => {
-    const [proposalFiles, setProposalFiles] = useState([{ id: uuidv4(), file: null }]);
+    const [proposalFiles, setProposalFiles] = useState([]);
     const { setProposalFileList } = addAnalyseStore();
 
     // const handleFileAdd = () => {
@@ -61,8 +61,12 @@ const Step3Page = () => {
                             <div className="flex flex-col gap-1 text-xs w-8/12">
                                 <span className="font-semibold">Proposal {index + 1}</span>
                                 <div className="flex flex-row justify-between w-9/12">
-                                    <span>File Name: {file.file.name}</span>
-                                    <span>Size: {bytesToMegabytes(file.file.size)} Mb</span>
+                                    {file.file && (
+                                        <>
+                                            <span>File Name: {file.file.name}</span>
+                                            <span>Size: {bytesToMegabytes(file.file.size)} Mb</span>
+                                        </>)
+                                    }
                                 </div>
                             </div>
                             <Trash2 className="text-destructive cursor-pointer" size={20} onClick={() => { handleFileRemove(file.id) }} />

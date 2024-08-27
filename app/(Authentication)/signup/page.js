@@ -23,7 +23,11 @@ const SignupPage = () => {
     const { setUserData } = userStore();
 
     const handleSignup = async () => {
-        if (!firstName || !lastName || !email || !password || !confirmPassword) {
+        console.log('firstName', firstName, lastName, email, password, confirmPassword)
+        if (firstName === '' || lastName === '' || email === '' || password === '' || confirmPassword === '') {
+            toast.error("Please fill all the fields")
+        }
+        else {
             if (password !== confirmPassword) {
                 toast.error("Passwords do not match")
                 return
@@ -41,9 +45,6 @@ const SignupPage = () => {
                 setIsLoading(false)
                 console.error(error)
             }
-        }
-        else {
-            toast.error("Please fill all the fields")
         }
     }
     return (
