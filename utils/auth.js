@@ -52,7 +52,7 @@ const Register = async ({ email, password, firstName, lastName }) => {
 
 const Logout = async () => {
     try {
-        const axios_instance = new AxiosConnector(`${process.env.NEXT_PUBLIC_BACKEND_URL}/logout`, 'application/json')
+        const axios_instance = new AxiosConnector(`${process.env.NEXT_PUBLIC_BACKEND_URL}`, 'application/json')
         await axios_instance.post('/logout')
 
         if (typeof window !== 'undefined') {

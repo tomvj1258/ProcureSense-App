@@ -12,6 +12,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { toast } from "sonner"
 import { addAnalyseStore } from "@/stores/addAnalyse";
 
+const maxTags = 6;
+
 const Step2Page = ({ handleAnalyseDataChange, handleRequestForProposalDataChange }) => {
 
     const { analyseData, requestForProposalData } = addAnalyseStore();
@@ -60,19 +62,19 @@ const Step2Page = ({ handleAnalyseDataChange, handleRequestForProposalDataChange
     }
 
     const handleTagAdd = () => {
-        if (tags.length >= maxTags) {
+        if (analyseTags.length >= maxTags) {
             toast.error(`You can only add ${maxTags} tags !`)
             return
         }
 
         if (tagName === '') return
 
-        if (tags.find(tag => tag.name === tagName)) {
+        if (analyseTags.find(tag => tag.name === tagName)) {
             toast.error(`Tag ${tagName} already exists !`)
             return
         }
 
-        setAnalyseTags([...tags, { id: uuidv4(), name: tagName }])
+        setAnalyseTags([...analyseTags, { id: uuidv4(), name: tagName }])
 
         setTagName('')
 
@@ -80,7 +82,7 @@ const Step2Page = ({ handleAnalyseDataChange, handleRequestForProposalDataChange
     }
 
     const handleTagRemove = (id) => {
-        setAnalyseTags(tags.filter((tag) => tag.id !== id))
+        setAnalyseTags(analyseTags.filter((tag) => tag.id !== id))
     }
 
     const handleScopeOfWorkChange = (idx, key, value) => {

@@ -71,19 +71,21 @@ const Step4Page = ({ handleProposalAnalyseDataChange, handleNext, handlePrevious
     }
 
     const setProposalData = (proposalData) => {
-        setCompanyName(proposalData.companyName);
-        setSubmissionDate(proposalData.submissionDate);
-        setCompanyAddress(proposalData.companyAddress);
-        setCompanyEmail(proposalData.companyEmail);
-        setCompanyWebsite(proposalData.companyWebsite);
-        setTermsConditions(proposalData?.termsConditions.join('\n'));
-        setPaymentTerms(proposalData?.paymentTerms.join('\n'));
-        setDeliveryTerms(proposalData?.deliveryTerms.join('\n'));
-        setImplementationDetails(proposalData?.proposalImplementation.join('\n'));
-        setScopeOfWork(proposalData.scopeOfWork);
-        setKeyBenefits(proposalData?.keyBenefits.join('\n'));
-        setContactDetail(proposalData.contactInformation.contactDetail);
-        setSubmittedBy(proposalData.contactInformation.submittedBy);
+        if (proposalData) {
+            setCompanyName(proposalData.companyName);
+            setSubmissionDate(proposalData.submissionDate);
+            setCompanyAddress(proposalData.companyAddress);
+            setCompanyEmail(proposalData.companyEmail);
+            setCompanyWebsite(proposalData.companyWebsite);
+            setTermsConditions(proposalData?.termsConditions.join('\n'));
+            setPaymentTerms(proposalData?.paymentTerms.join('\n'));
+            setDeliveryTerms(proposalData?.deliveryTerms.join('\n'));
+            setImplementationDetails(proposalData?.proposalImplementation.join('\n'));
+            setScopeOfWork(proposalData.scopeOfWork);
+            setKeyBenefits(proposalData?.keyBenefits.join('\n'));
+            setContactDetail(proposalData.contactInformation.contactDetail);
+            setSubmittedBy(proposalData.contactInformation.submittedBy);
+        }
     }
 
     useEffect(() => {

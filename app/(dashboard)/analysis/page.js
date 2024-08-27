@@ -113,7 +113,7 @@ const AnalysisPage = () => {
                         <div className="flex flex-1">
                             <div className="flex flex-col gap-4 w-full">
                                 <Tabs defaultValue="general" className="w-full">
-                                    <TabsList>
+                                    <TabsList className="sticky top-28">
                                         <TabsTrigger value="general">General</TabsTrigger>
                                         <TabsTrigger value="financial">Financial</TabsTrigger>
                                         <TabsTrigger value="risk">Risk</TabsTrigger>
