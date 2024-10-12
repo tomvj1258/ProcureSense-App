@@ -19,11 +19,15 @@ import { fetchAnalyse } from "@/utils/dashboard";
 import GeneralPage from "@/components/pages/general";
 import FinancialPage from "@/components/pages/financial";
 import RiskPage from "@/components/pages/risk";
+import { ProposalSidebar } from "@/components/pages/proposal-sidebar";
 
 const AnalysisPage = () => {
    const {
       analyseList,
       selectedAnalyseId,
+      selectedGeneralAnalyseData,
+      selectedFinancialAnalyseData,
+      selectedRiskAnalyseData,
       setSelectedGeneralAnalyseData,
       setSelectedFinancialAnalyseData,
       setSelectedRiskAnalyseData,
@@ -36,6 +40,24 @@ const AnalysisPage = () => {
    const filteredAnalyseList = analyseList.filter(
       (analyse) => analyse.status === "completed"
    );
+   const [tabValue, setTabValue] = useState("general");
+
+   const generalProposal = selectedGeneralAnalyseData?.proposal;
+   const financialProposal = selectedFinancialAnalyseData?.proposalAnalyse;
+   const riskProposal = selectedRiskAnalyseData?.proposalAnalyse;
+
+   const getProposalData = () => {
+      switch (tabValue) {
+         case "general":
+            return selectedGeneralAnalyseData?.proposal || [];
+         case "financial":
+            return selectedFinancialAnalyseData?.proposalAnalyse || [];
+         case "risk":
+            return selectedRiskAnalyseData?.proposalAnalyse || [];
+         default:
+            return [];
+      }
+   };
 
    const handleAnalyseSelection = async (id) => {
       setAnalyseId(id);
@@ -137,12 +159,24 @@ const AnalysisPage = () => {
          ) : analyseId ? (
             <div className='flex flex-1'>
                <div className='flex flex-col gap-4 w-full'>
-                  <Tabs defaultValue='general' className='w-full'>
-                     <TabsList className='sticky top-28'>
-                        <TabsTrigger value='general'>General</TabsTrigger>
-                        <TabsTrigger value='financial'>Financial</TabsTrigger>
-                        <TabsTrigger value='risk'>Risk</TabsTrigger>
-                     </TabsList>
+                  <Tabs
+                     defaultValue='general'
+                     className='w-full'
+                     onValueChange={(value) => setTabValue(value)}
+                  >
+                     <div className='flex flex-col md:flex-row gap-2 md:gap-4 justify-between items-start sticky top-14  mb-4 pt-3'>
+                        <div className='order-2 md:order-1'>
+                           <ProposalSidebar proposalData={getProposalData()} />
+                        </div>
+
+                        <TabsList className='sticky top-16 shadow-lg order-1 md:order-2'>
+                           <TabsTrigger value='general'>General</TabsTrigger>
+                           <TabsTrigger value='financial'>
+                              Financial
+                           </TabsTrigger>
+                           <TabsTrigger value='risk'>Risk</TabsTrigger>
+                        </TabsList>
+                     </div>
 
                      <TabsContent value='general'>
                         {isStoreUpdated && !isLoading && <GeneralPage />}

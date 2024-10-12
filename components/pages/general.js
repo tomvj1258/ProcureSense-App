@@ -37,12 +37,13 @@ const GeneralPage = () => {
 
    return (
       <>
+         {/* <div className='grid grid-cols-[auto,1fr] gap-4 '> */}
          <div className='grid grid-cols-[auto,1fr] gap-4 '>
-            <div className=' min-h-full mt-1  '>
-               <ProposalSidebar proposalData={proposals} />
-            </div>
+            {/* <div className=' min-h-full mt-1 sticky top-40 '> */}
+            {/* <ProposalSidebar proposalData={proposals} /> */}
+            {/* </div> */}
 
-            <div className='w-full '>
+            <div className='w-full col-span-full '>
                <Card>
                   <CardHeader>
                      <CardTitle>General</CardTitle>

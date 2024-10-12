@@ -37,10 +37,10 @@ const FinancialPage = () => {
    return (
       <>
          <div className='grid grid-cols-[auto,1fr] gap-4 '>
-            <div className=' min-h-full mt-1  '>
+            {/* <div className=' min-h-full mt-1  '>
                <ProposalSidebar proposalData={proposalAnalyse} />
-            </div>
-            <div className='w-full'>
+            </div> */}
+            <div className='w-full col-span-full'>
                <Card>
                   <CardHeader>
                      <CardTitle>Financial</CardTitle>

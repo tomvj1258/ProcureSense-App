@@ -10,6 +10,9 @@ import {
    LogOut,
    Settings,
    ChevronsRight,
+   ChevronsLeft,
+   ChevronLeft,
+   ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,6 +44,7 @@ const DashboardLayout = ({ children }) => {
    const { setAnalyseList, setTotalAnalyse, setSelectedAnalyseId } =
       dashboardStore();
    const [isLoading, setIsLoading] = useState(true);
+   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
    const handleLogout = async () => {
       try {
@@ -75,11 +79,19 @@ const DashboardLayout = ({ children }) => {
       }
    }, []);
 
+   const toggleSidebar = () => {
+      setIsSidebarOpen(!isSidebarOpen);
+   };
+
    return (
-      <div className='grid min-h-screen w-full md:grid-cols-[200px_1fr] lg:grid-cols-[200px_1fr]'>
-         <div className='hidden border-r md:block'>
-            <div className='sticky top-0 flex h-full max-h-screen flex-col gap-2'>
-               <div className='flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6'>
+      <div className='grid min-h-screen w-full md:grid-cols-[auto_1fr] lg:grid-cols-[auto_1fr]'>
+         <div
+            className={`hidden border-r md:block z-20 ${
+               isSidebarOpen ? "w-[12.5rem]" : "w-[5rem]"
+            } transition-all duration-300`}
+         >
+            <div className='sticky top-0 flex h-full max-h-screen flex-col gap-2 '>
+               <div className='flex h-14 items-center gap-5 border-b px-4 lg:h-[60px] lg:px-6  justify-between relative'>
                   <Link
                      href='/home'
                      className='flex items-center gap-2 font-semibold'
@@ -89,53 +101,82 @@ const DashboardLayout = ({ children }) => {
                         size={16}
                         className='h-6 w-6 text-primary'
                      />
-                     <span className='text-primary'>Procure Sense</span>
+                     {isSidebarOpen && (
+                        <span className='text-primary w-full flex-1'>
+                           Procure Sense
+                        </span>
+                     )}
                   </Link>
+                  <Button
+                     variant='ghost'
+                     size='icon'
+                     onClick={toggleSidebar}
+                     className='absolute -right-4 z-50 top-20 border  ml-1 rounded-full hover:text-primary'
+                  >
+                     {isSidebarOpen ? (
+                        <ChevronLeft className='size-5 ' />
+                     ) : (
+                        <ChevronRight className='size-5  ' />
+                     )}
+                  </Button>
                </div>
                <div className='flex-1'>
                   <nav className='grid items-start px-2 text-sm font-medium lg:px-4'>
                      <Link
                         href='/home'
-                        className={
-                           "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary " +
-                           (pathname === "/home" ? "text-primary" : "")
-                        }
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${
+                           pathname === "/home" ? "text-primary" : ""
+                        }`}
                      >
-                        <Home className='h-4 w-4' />
-                        Home
+                        <Home className='size-6' />
+                        {isSidebarOpen && "Home"}
                      </Link>
                      <Link
                         href='/analysis'
-                        className={
-                           "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary " +
-                           (pathname === "/analysis" ? "text-primary" : "")
-                        }
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary ${
+                           pathname === "/analysis" ? "text-primary" : ""
+                        }`}
                      >
-                        <LineChart className='h-4 w-4' />
-                        Analysis
+                        <LineChart className='size-6' />
+                        {isSidebarOpen && "Analysis"}
                      </Link>
                   </nav>
                </div>
-               <div className='mt-auto p-2'>
-                  <Card>
-                     <CardHeader className='p-2 pt-0 md:p-4'>
-                        <CardTitle className='text-sm'>Add Analysis</CardTitle>
-                        <CardDescription className='text-xs'>
-                           Add Analysis to your dashboard to get insights on
-                           your proposals.
-                        </CardDescription>
-                     </CardHeader>
-                     <CardContent className='p-2 pt-0 md:p-4 md:pt-0'>
-                        <Button
-                           size='sm'
-                           className='flex flex-row gap-2 w-full'
-                        >
-                           <Plus size={12} absoluteStrokeWidth={1} />
-                           <Link href='/add-analysis'>Add Analysis</Link>
-                        </Button>
-                     </CardContent>
-                  </Card>
-               </div>
+               {isSidebarOpen ? (
+                  <div className='mt-auto p-2'>
+                     <Card>
+                        <CardHeader className='p-2 pt-0 md:p-4'>
+                           <CardTitle className='text-sm'>
+                              Add Analysis
+                           </CardTitle>
+                           <CardDescription className='text-xs'>
+                              Add Analysis to your dashboard to get insights on
+                              your proposals.
+                           </CardDescription>
+                        </CardHeader>
+                        <CardContent className='p-2 pt-0 md:p-4 md:pt-0'>
+                           <Button
+                              size='sm'
+                              className='flex flex-row gap-2 w-full'
+                           >
+                              <Plus size={12} absoluteStrokeWidth={1} />
+                              <Link href='/add-analysis'>Add Analysis</Link>
+                           </Button>
+                        </CardContent>
+                     </Card>
+                  </div>
+               ) : (
+                  <div className='flex items-center justify-center pb-5'>
+                     <Link
+                        href='/add-analysis'
+                        size='sm'
+                        className='inline-flex p-3 size-10 bg-primary justify-center items-center text-white  rounded-full'
+                     >
+                        <Plus size={18} absoluteStrokeWidth={3} />
+                        {/* <Link href='/add-analysis'>Add Analysis</Link> */}
+                     </Link>
+                  </div>
+               )}
             </div>
          </div>
          <div className='flex flex-col'>
@@ -166,22 +207,20 @@ const DashboardLayout = ({ children }) => {
                         </Link>
                         <Link
                            href='/home'
-                           className={
-                              "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground " +
-                              (pathname === "/home" ? "text-primary" : "")
-                           }
+                           className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
+                              pathname === "/home" ? "text-primary" : ""
+                           }`}
                         >
-                           <Home className='h-4 w-4' />
+                           <Home className='size-6' />
                            Home
                         </Link>
                         <Link
                            href='/analysis'
-                           className={
-                              "mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground " +
-                              (pathname === "/analysis" ? "text-primary" : "")
-                           }
+                           className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground ${
+                              pathname === "/analysis" ? "text-primary" : ""
+                           }`}
                         >
-                           <LineChart className='h-4 w-4' />
+                           <LineChart className='size-6' />
                            Analysis
                         </Link>
                      </nav>
@@ -238,7 +277,7 @@ const DashboardLayout = ({ children }) => {
                   </DropdownMenuContent>
                </DropdownMenu>
             </header>
-            <main className='flex flex-1 flex-col gap-4 p-4  lg:gap-6 lg:p-6  min-h-[80%] bg-muted/40'>
+            <main className='flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6 min-h-[80%] bg-muted/40'>
                {isLoading ? <Loader /> : children}
             </main>
          </div>
