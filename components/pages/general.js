@@ -41,7 +41,8 @@ const GeneralPage = () => {
             <div className=' min-h-full mt-1  '>
                <ProposalSidebar proposalData={proposals} />
             </div>
-            <div className='w-full'>
+
+            <div className='w-full '>
                <Card>
                   <CardHeader>
                      <CardTitle>General</CardTitle>
