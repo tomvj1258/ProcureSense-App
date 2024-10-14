@@ -170,7 +170,7 @@ const DashboardLayout = ({ children }) => {
                      <Link
                         href='/add-analysis'
                         size='sm'
-                        className='inline-flex p-3 size-10 bg-primary justify-center items-center text-white  rounded-full'
+                        className='inline-flex p-3 size-10 bg-primary hover:bg-primary/90 justify-center items-center text-white  rounded-full'
                      >
                         <Plus size={18} absoluteStrokeWidth={3} />
                         {/* <Link href='/add-analysis'>Add Analysis</Link> */}
