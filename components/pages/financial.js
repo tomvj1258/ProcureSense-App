@@ -52,77 +52,8 @@ const FinancialPage = () => {
                   <CardContent>
                      <div className='flex flex-col gap-2'>
                         <form className='grid w-full items-start gap-6 overflow-auto pt-0'>
-                           <fieldset className='grid gap-6 rounded-lg border p-4'>
-                              <legend className='-ml-1 px-1 text-sm font-medium'>
-                                 Basic Metrics
-                              </legend>
-                              <div className='flex flex-col gap-3 text-sm'>
-                                 <div className='flex flex-row gap-1 w-full'>
-                                    <span className='font-semibold w-2/12'>
-                                       Average Quotion Value
-                                    </span>
-                                    <span className='w-10/12'>
-                                       {financialAnalyse.avgQuote}
-                                    </span>
-                                 </div>
-                                 <div className='flex flex-row gap-1'>
-                                    <span className='font-semibold w-2/12'>
-                                       Maximum Quotation Value
-                                    </span>
-                                    <span className='flex flex-row w-10/12'>
-                                       {financialAnalyse.maxQuote} -
-                                       <span
-                                          className='flex flex-row gap-2 items-center cursor-pointer hover:underline hover:text-primary capitalize'
-                                          onClick={() => {
-                                             handleSectionScroll(
-                                                `proposal${
-                                                   financialAnalyse.maxQuoteProposal +
-                                                   1
-                                                }`
-                                             );
-                                          }}
-                                       >
-                                          {fetchProposalCompanyName(
-                                             financialAnalyse.maxQuoteProposal
-                                          )}
-                                          <SquareArrowOutUpRight
-                                             size={14}
-                                             className='text-primary'
-                                          />
-                                       </span>
-                                    </span>
-                                 </div>
-                                 <div className='flex flex-row gap-1'>
-                                    <span className='font-semibold w-2/12'>
-                                       Minimum Quotation Value
-                                    </span>
-                                    <span className='flex flex-row w-10/12'>
-                                       {financialAnalyse.minQuote} -
-                                       <span
-                                          className='flex flex-row gap-2 items-center cursor-pointer hover:underline hover:text-primary capitalize'
-                                          onClick={() => {
-                                             handleSectionScroll(
-                                                `proposal${
-                                                   financialAnalyse.maxQuoteProposal +
-                                                   1
-                                                }`
-                                             );
-                                          }}
-                                       >
-                                          {fetchProposalCompanyName(
-                                             financialAnalyse.minQuoteProposal
-                                          )}
-                                          <SquareArrowOutUpRight
-                                             size={14}
-                                             className='text-primary'
-                                          />
-                                       </span>
-                                    </span>
-                                 </div>
-                              </div>
-                           </fieldset>
-                           <fieldset className='grid gap-6 rounded-lg border p-4'>
-                              <legend className='-ml-1 px-1 text-sm font-medium'>
+                           <fieldset className='fieldset'>
+                              <legend className='legend'>
                                  Ranking Information
                               </legend>
                               <div className='flex flex-col gap-3 text-sm'>
@@ -216,13 +147,82 @@ const FinancialPage = () => {
                                  </div>
                               </div>
                            </fieldset>
+
+                           <fieldset className='fieldset'>
+                              <legend className='legend'>Basic Metrics</legend>
+                              <div className='flex flex-col gap-3 text-sm'>
+                                 <div className='flex flex-row gap-1 w-full'>
+                                    <span className='font-semibold w-2/12'>
+                                       Average Quotion Value
+                                    </span>
+                                    <span className='w-10/12'>
+                                       {financialAnalyse.avgQuote}
+                                    </span>
+                                 </div>
+                                 <div className='flex flex-row gap-1'>
+                                    <span className='font-semibold w-2/12'>
+                                       Maximum Quotation Value
+                                    </span>
+                                    <span className='flex flex-row w-10/12'>
+                                       {financialAnalyse.maxQuote} -
+                                       <span
+                                          className='flex flex-row gap-2 items-center cursor-pointer hover:underline hover:text-primary capitalize'
+                                          onClick={() => {
+                                             handleSectionScroll(
+                                                `proposal${
+                                                   financialAnalyse.maxQuoteProposal +
+                                                   1
+                                                }`
+                                             );
+                                          }}
+                                       >
+                                          {fetchProposalCompanyName(
+                                             financialAnalyse.maxQuoteProposal
+                                          )}
+                                          <SquareArrowOutUpRight
+                                             size={14}
+                                             className='text-primary'
+                                          />
+                                       </span>
+                                    </span>
+                                 </div>
+                                 <div className='flex flex-row gap-1'>
+                                    <span className='font-semibold w-2/12'>
+                                       Minimum Quotation Value
+                                    </span>
+                                    <span className='flex flex-row w-10/12'>
+                                       {financialAnalyse.minQuote} -
+                                       <span
+                                          className='flex flex-row gap-2 items-center cursor-pointer hover:underline hover:text-primary capitalize'
+                                          onClick={() => {
+                                             handleSectionScroll(
+                                                `proposal${
+                                                   financialAnalyse.maxQuoteProposal +
+                                                   1
+                                                }`
+                                             );
+                                          }}
+                                       >
+                                          {fetchProposalCompanyName(
+                                             financialAnalyse.minQuoteProposal
+                                          )}
+                                          <SquareArrowOutUpRight
+                                             size={14}
+                                             className='text-primary'
+                                          />
+                                       </span>
+                                    </span>
+                                 </div>
+                              </div>
+                           </fieldset>
+
                            {proposalAnalyse.map((proposal, idx) => (
                               <fieldset
                                  key={idx}
                                  id={`proposal${idx + 1}`}
-                                 className='grid gap-6 rounded-lg border p-4'
+                                 className='fieldset'
                               >
-                                 <legend className='-ml-1 px-1 text-sm font-medium'>
+                                 <legend className='legend'>
                                     Proposal - {idx + 1} Information
                                  </legend>
                                  <div className='flex flex-col gap-3 text-sm'>

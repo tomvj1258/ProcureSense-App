@@ -56,8 +56,105 @@ const GeneralPage = () => {
                      <CardContent>
                         <div className='flex flex-col gap-2'>
                            <form className='grid w-full items-start gap-6 overflow-auto pt-0'>
-                              <fieldset className='grid gap-6 rounded-lg border p-4'>
-                                 <legend className='-ml-1 px-1 text-sm font-medium'>
+                              <fieldset className='fieldset'>
+                                 <legend className='legend'>
+                                    Ranking Information
+                                 </legend>
+                                 <div className='flex flex-col gap-3 text-sm'>
+                                    <div className='flex flex-row gap-1 w-full'>
+                                       <span className='flex flex-row gap-2 items-center font-semibold w-2/12'>
+                                          <Crown
+                                             size={16}
+                                             className='text-warning-text'
+                                          />
+                                          Suggested Proposal
+                                       </span>
+                                       <span
+                                          className='flex flex-row gap-2 items-center w-10/12 cursor-pointer hover:underline hover:text-primary capitalize'
+                                          onClick={() => {
+                                             handleSectionScroll(
+                                                `proposal${
+                                                   overallSuitableProposal + 1
+                                                }`
+                                             );
+                                          }}
+                                       >
+                                          Proposal {overallSuitableProposal + 1}{" "}
+                                          -{" "}
+                                          {fetchProposalCompanyName(
+                                             overallSuitableProposal
+                                          )}
+                                          <SquareArrowOutUpRight
+                                             size={14}
+                                             className='text-primary'
+                                          />
+                                       </span>
+                                    </div>
+                                    <div className='flex flex-row gap-1 w-full items-start'>
+                                       <span className='flex flex-row gap-2 items-center font-semibold w-2/12'>
+                                          Reason For Suggestion
+                                       </span>
+                                       <span className='flex flex-col gap-1 w-10/12'>
+                                          {reasonForOverallSelection.map(
+                                             (reason, idx) => (
+                                                <span
+                                                   key={idx}
+                                                   className='flex flex-row gap-2 items-center'
+                                                >
+                                                   <Check
+                                                      size={16}
+                                                      className='text-success-text'
+                                                   />
+                                                   {reason}
+                                                </span>
+                                             )
+                                          )}
+                                       </span>
+                                    </div>
+                                    <div className='flex flex-row gap-1 items-start w-full'>
+                                       <span className='font-semibold w-2/12'>
+                                          Ranking
+                                       </span>
+                                       <span className='flex flex-col gap-2 w-10/12 capitalize'>
+                                          {ranking.map((proposal, idx) => (
+                                             <span
+                                                key={idx}
+                                                className='flex flex-col gap-2'
+                                             >
+                                                <span
+                                                   className='flex flex-row gap-2 items-center cursor-pointer hover:underline hover:text-primary capitalize'
+                                                   onClick={() => {
+                                                      handleSectionScroll(
+                                                         `proposal${
+                                                            proposal + 1
+                                                         }`
+                                                      );
+                                                   }}
+                                                >
+                                                   {idx + 1} -{" "}
+                                                   {fetchProposalCompanyName(
+                                                      proposal
+                                                   )}
+                                                   <SquareArrowOutUpRight
+                                                      size={14}
+                                                      className='text-primary'
+                                                   />
+                                                </span>
+                                                <span>
+                                                   Reason:{" "}
+                                                   {proposalAnalyse[
+                                                      proposal
+                                                   ].reasonForRank.join(", ")}
+                                                </span>
+                                             </span>
+                                          ))}
+                                       </span>
+                                    </div>
+                                 </div>
+                              </fieldset>
+
+                              <fieldset className='fieldset'>
+                                 <legend className='legend'>
                                     Request For Proposal Information
                                  </legend>
                                  <div className='flex flex-col gap-3 text-sm'>
@@ -222,8 +319,9 @@ const GeneralPage = () => {
                                     </div>
                                  </div>
                               </fieldset>
-                              <fieldset className='grid gap-6 rounded-lg border p-4'>
-                                 <legend className='-ml-1 px-1 text-sm font-medium'>
+
+                              <fieldset className='fieldset'>
+                                 <legend className='legend'>
                                     Analyse Information
                                  </legend>
                                  <div className='flex flex-col gap-3 text-sm'>
@@ -261,109 +359,14 @@ const GeneralPage = () => {
                                     </div>
                                  </div>
                               </fieldset>
-                              <fieldset className='grid gap-6 rounded-lg border p-4'>
-                                 <legend className='-ml-1 px-1 text-sm font-medium'>
-                                    Ranking Information
-                                 </legend>
-                                 <div className='flex flex-col gap-3 text-sm'>
-                                    <div className='flex flex-row gap-1 w-full'>
-                                       <span className='flex flex-row gap-2 items-center font-semibold w-2/12'>
-                                          <Crown
-                                             size={16}
-                                             className='text-warning-text'
-                                          />
-                                          Suggested Proposal
-                                       </span>
-                                       <span
-                                          className='flex flex-row gap-2 items-center w-10/12 cursor-pointer hover:underline hover:text-primary capitalize'
-                                          onClick={() => {
-                                             handleSectionScroll(
-                                                `proposal${
-                                                   overallSuitableProposal + 1
-                                                }`
-                                             );
-                                          }}
-                                       >
-                                          Proposal {overallSuitableProposal + 1}{" "}
-                                          -{" "}
-                                          {fetchProposalCompanyName(
-                                             overallSuitableProposal
-                                          )}
-                                          <SquareArrowOutUpRight
-                                             size={14}
-                                             className='text-primary'
-                                          />
-                                       </span>
-                                    </div>
-                                    <div className='flex flex-row gap-1 w-full items-start'>
-                                       <span className='flex flex-row gap-2 items-center font-semibold w-2/12'>
-                                          Reason For Suggestion
-                                       </span>
-                                       <span className='flex flex-col gap-1 w-10/12'>
-                                          {reasonForOverallSelection.map(
-                                             (reason, idx) => (
-                                                <span
-                                                   key={idx}
-                                                   className='flex flex-row gap-2 items-center'
-                                                >
-                                                   <Check
-                                                      size={16}
-                                                      className='text-success-text'
-                                                   />
-                                                   {reason}
-                                                </span>
-                                             )
-                                          )}
-                                       </span>
-                                    </div>
-                                    <div className='flex flex-row gap-1 items-start w-full'>
-                                       <span className='font-semibold w-2/12'>
-                                          Ranking
-                                       </span>
-                                       <span className='flex flex-col gap-2 w-10/12 capitalize'>
-                                          {ranking.map((proposal, idx) => (
-                                             <span
-                                                key={idx}
-                                                className='flex flex-col gap-2'
-                                             >
-                                                <span
-                                                   className='flex flex-row gap-2 items-center cursor-pointer hover:underline hover:text-primary capitalize'
-                                                   onClick={() => {
-                                                      handleSectionScroll(
-                                                         `proposal${
-                                                            proposal + 1
-                                                         }`
-                                                      );
-                                                   }}
-                                                >
-                                                   {idx + 1} -{" "}
-                                                   {fetchProposalCompanyName(
-                                                      proposal
-                                                   )}
-                                                   <SquareArrowOutUpRight
-                                                      size={14}
-                                                      className='text-primary'
-                                                   />
-                                                </span>
-                                                <span>
-                                                   Reason:{" "}
-                                                   {proposalAnalyse[
-                                                      proposal
-                                                   ].reasonForRank.join(", ")}
-                                                </span>
-                                             </span>
-                                          ))}
-                                       </span>
-                                    </div>
-                                 </div>
-                              </fieldset>
+
                               {proposals.map((proposal, idx) => (
                                  <fieldset
                                     key={idx}
                                     id={`proposal${idx + 1}`}
-                                    className='grid gap-6 rounded-lg border p-4 '
+                                    className='fieldset'
                                  >
-                                    <legend className='-ml-1  px-1 text-sm font-medium'>
+                                    <legend className='legend'>
                                        Proposal - {idx + 1} Information
                                     </legend>
                                     <div className='flex flex-col gap-3 text-sm'>

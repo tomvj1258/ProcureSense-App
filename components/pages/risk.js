@@ -51,8 +51,8 @@ const RiskPage = () => {
                   <CardContent>
                      <div className='flex flex-col gap-2'>
                         <form className='grid w-full items-start gap-6 overflow-auto pt-0'>
-                           <fieldset className='grid gap-6 rounded-lg border p-4'>
-                              <legend className='-ml-1 px-1 text-sm font-medium'>
+                           <fieldset className='fieldset'>
+                              <legend className='legend'>
                                  Ranking Information
                               </legend>
                               <div className='flex flex-col gap-3 text-sm'>
@@ -146,13 +146,14 @@ const RiskPage = () => {
                                  </div>
                               </div>
                            </fieldset>
+
                            {proposalAnalyse.map((proposal, idx) => (
                               <fieldset
                                  key={idx}
                                  id={`proposal${idx + 1}`}
-                                 className='grid gap-6 rounded-lg border p-4'
+                                 className='fieldset'
                               >
-                                 <legend className='-ml-1 px-1 text-sm font-medium'>
+                                 <legend className='legend'>
                                     Proposal - {idx + 1} Information
                                  </legend>
                                  <div className='flex flex-col gap-3 text-sm'>
