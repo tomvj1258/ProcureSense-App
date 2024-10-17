@@ -6,13 +6,28 @@ html {
   scroll-behavior: smooth;
 }
 
+body::-webkit-scrollbar {
+  display: none !important;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
 @layer base {
   .legend {
     @apply -ml-1 px-2 text-sm font-semibold text-primary border bg-primary/10 rounded-3xl py-0.5
   }
 
   .fieldset {
-    @apply grid gap-6 rounded-lg border-2 p-4 border-primary/20 shadow-lg
+    @apply grid gap-6 rounded-xl border-2 p-4 pb-5  border-primary/20 shadow-lg
   }
 }
 

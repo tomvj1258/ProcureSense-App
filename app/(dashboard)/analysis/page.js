@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { ArrowUp, ArrowUp01, ArrowUpNarrowWide, Plus } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import {
    Select,
@@ -20,6 +20,7 @@ import GeneralPage from "@/components/pages/general";
 import FinancialPage from "@/components/pages/financial";
 import RiskPage from "@/components/pages/risk";
 import { ProposalSidebar } from "@/components/pages/proposal-sidebar";
+import { ScrollToTop } from "@/components/scroll-to-top";
 
 const AnalysisPage = () => {
    const {
@@ -134,7 +135,7 @@ const AnalysisPage = () => {
 
    return (
       <>
-         <div className='flex flex-row items-center justify-between'>
+         <div className='flex flex-row items-center justify-between no-scrollbar'>
             <h1 className='text-lg font-semibold md:text-2xl'>Analysis</h1>
             {filteredAnalyseList.length > 0 && (
                <Select
@@ -157,7 +158,7 @@ const AnalysisPage = () => {
          {isLoading ? (
             <Loader />
          ) : analyseId ? (
-            <div className='flex flex-1'>
+            <div className='flex flex-1 relative'>
                <div className='flex flex-col gap-4 w-full'>
                   <Tabs
                      defaultValue='general'
@@ -189,6 +190,8 @@ const AnalysisPage = () => {
                         <RiskPage />
                      </TabsContent>
                   </Tabs>
+
+                  <ScrollToTop />
                </div>
             </div>
          ) : (

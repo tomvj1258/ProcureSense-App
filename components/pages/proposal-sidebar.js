@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 export const ProposalSidebar = ({ proposalData }) => {
-   const scrollToElement = useScrollWithOffset(160);
+   const scrollToElement = useScrollWithOffset(130);
 
    return (
       <>
