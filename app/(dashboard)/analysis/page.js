@@ -136,7 +136,7 @@ const AnalysisPage = () => {
       <>
          <div className='flex flex-row items-center justify-between'>
             <h1 className='text-lg font-semibold md:text-2xl'>Analysis</h1>
-            {/* {filteredAnalyseList.length > 0 && (
+            {filteredAnalyseList.length > 0 && (
                <Select
                   onValueChange={(id) => handleAnalyseSelection(id)}
                   defaultValue={analyseId}
@@ -152,7 +152,7 @@ const AnalysisPage = () => {
                      ))}
                   </SelectContent>
                </Select>
-            )} */}
+            )}
          </div>
          {isLoading ? (
             <Loader />

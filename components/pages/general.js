@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Crown, SquareArrowOutUpRight, Check } from "lucide-react";
+import { Crown, SquareArrowOutUpRight, Check, Star } from "lucide-react";
 import {
    Card,
    CardHeader,
@@ -60,46 +60,81 @@ const GeneralPage = () => {
                                  <legend className='legend'>
                                     Ranking Information
                                  </legend>
-                                 <div className='flex flex-col gap-3 text-sm'>
-                                    <div className='flex flex-row gap-1 w-full'>
-                                       <span className='flex flex-row gap-2 items-center font-semibold w-2/12'>
+                                 <div className='flex flex-col gap-5 text-sm'>
+                                    <div className='flex flex-col gap-3 w-full'>
+                                       <span className='flex flex-row gap-2 items-center font-semibold underline text-base'>
                                           <Crown
                                              size={16}
                                              className='text-warning-text'
                                           />
                                           Suggested Proposal
                                        </span>
-                                       <span
-                                          className='flex flex-row gap-2 items-center w-10/12 cursor-pointer hover:underline hover:text-primary capitalize'
-                                          onClick={() => {
-                                             handleSectionScroll(
-                                                `proposal${
-                                                   overallSuitableProposal + 1
-                                                }`
-                                             );
-                                          }}
-                                       >
-                                          Proposal {overallSuitableProposal + 1}{" "}
-                                          -{" "}
-                                          {fetchProposalCompanyName(
-                                             overallSuitableProposal
-                                          )}
-                                          <SquareArrowOutUpRight
-                                             size={14}
-                                             className='text-primary'
-                                          />
-                                       </span>
+                                       <div className='container flex flex-col gap-4 mx-auto'>
+                                          <div className='flex gap-3 items-center '>
+                                             <span className=''>
+                                                <Star
+                                                   size={20}
+                                                   className='border bg-yellow-400 rounded-full p-0.5 text-white size-6'
+                                                />
+                                             </span>
+                                             <span
+                                                className='flex flex-row gap-2 text-sm font-semibold items-center cursor-pointer hover:underline hover:text-primary capitalize'
+                                                onClick={() => {
+                                                   handleSectionScroll(
+                                                      `proposal${
+                                                         overallSuitableProposal +
+                                                         1
+                                                      }`
+                                                   );
+                                                }}
+                                             >
+                                                Proposal{" "}
+                                                {overallSuitableProposal + 1} -{" "}
+                                                {fetchProposalCompanyName(
+                                                   overallSuitableProposal
+                                                )}
+                                                <SquareArrowOutUpRight
+                                                   size={14}
+                                                   className='text-primary'
+                                                />
+                                             </span>
+                                          </div>
+
+                                          <div className='flex flex-col gap-1 w-full items-start'>
+                                             <span className='flex flex-row gap-2 items-center font-semibold w-2/12'>
+                                                Reason For Suggestion
+                                             </span>
+                                             <span className='flex flex-col gap-1  container mx-auto'>
+                                                {reasonForOverallSelection.map(
+                                                   (reason, idx) => (
+                                                      <span
+                                                         key={idx}
+                                                         className='flex flex-row gap-2 text-sm font-medium items-start'
+                                                      >
+                                                         <Check
+                                                            size={16}
+                                                            className='text-success-text '
+                                                         />
+                                                         <span className='max-w-md'>
+                                                            {reason}
+                                                         </span>
+                                                      </span>
+                                                   )
+                                                )}
+                                             </span>
+                                          </div>
+                                       </div>
                                     </div>
-                                    <div className='flex flex-row gap-1 w-full items-start'>
+                                    {/* <div className='flex flex-col gap-1 w-full items-start'>
                                        <span className='flex flex-row gap-2 items-center font-semibold w-2/12'>
                                           Reason For Suggestion
                                        </span>
-                                       <span className='flex flex-col gap-1 w-10/12'>
+                                       <span className='flex flex-col gap-1 container mx-auto'>
                                           {reasonForOverallSelection.map(
                                              (reason, idx) => (
                                                 <span
                                                    key={idx}
-                                                   className='flex flex-row gap-2 items-center'
+                                                   className='flex flex-row gap-2 text-sm font-medium items-center'
                                                 >
                                                    <Check
                                                       size={16}
@@ -110,45 +145,52 @@ const GeneralPage = () => {
                                              )
                                           )}
                                        </span>
-                                    </div>
-                                    <div className='flex flex-row gap-1 items-start w-full'>
+                                    </div> */}
+                                    <div className='flex flex-col gap-1 items-start w-full'>
                                        <span className='font-semibold w-2/12'>
                                           Ranking
                                        </span>
-                                       <span className='flex flex-col gap-2 w-10/12 capitalize'>
-                                          {ranking.map((proposal, idx) => (
-                                             <span
-                                                key={idx}
-                                                className='flex flex-col gap-2'
-                                             >
-                                                <span
-                                                   className='flex flex-row gap-2 items-center cursor-pointer hover:underline hover:text-primary capitalize'
-                                                   onClick={() => {
-                                                      handleSectionScroll(
-                                                         `proposal${
-                                                            proposal + 1
-                                                         }`
-                                                      );
-                                                   }}
+                                       <div className='container mx-auto'>
+                                          <span className='flex flex-wrap  container mx-auto gap-4  capitalize'>
+                                             {ranking.map((proposal, idx) => (
+                                                <Card
+                                                   key={idx}
+                                                   className='flex flex-col gap-2'
                                                 >
-                                                   {idx + 1} -{" "}
-                                                   {fetchProposalCompanyName(
-                                                      proposal
-                                                   )}
-                                                   <SquareArrowOutUpRight
-                                                      size={14}
-                                                      className='text-primary'
-                                                   />
-                                                </span>
-                                                <span>
-                                                   Reason:{" "}
-                                                   {proposalAnalyse[
-                                                      proposal
-                                                   ].reasonForRank.join(", ")}
-                                                </span>
-                                             </span>
-                                          ))}
-                                       </span>
+                                                   <CardHeader
+                                                      className='flex flex-row font-semibold  gap-2 px-4 py-2 items-center cursor-pointer hover:underline  hover:text-primary capitalize'
+                                                      onClick={() => {
+                                                         handleSectionScroll(
+                                                            `proposal${
+                                                               proposal + 1
+                                                            }`
+                                                         );
+                                                      }}
+                                                   >
+                                                      <span className='border text-sm font-semibold rounded-full bg-primary/80 size-7 flex items-center justify-center text-white hover:bg-primary'>
+                                                         {idx + 1}
+                                                      </span>
+                                                      {/* {idx + 1} -{" "} */}
+                                                      {fetchProposalCompanyName(
+                                                         proposal
+                                                      )}
+                                                      <SquareArrowOutUpRight
+                                                         size={14}
+                                                         className='text-primary'
+                                                      />
+                                                   </CardHeader>
+                                                   <CardContent className='max-w-xs '>
+                                                      Reason:{" "}
+                                                      {proposalAnalyse[
+                                                         proposal
+                                                      ].reasonForRank.join(
+                                                         ", "
+                                                      )}
+                                                   </CardContent>
+                                                </Card>
+                                             ))}
+                                          </span>
+                                       </div>
                                     </div>
                                  </div>
                               </fieldset>
